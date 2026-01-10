@@ -1,0 +1,36 @@
+.error404Page {
+  width: 100%;
+  height: 100%;
+  font-size: clamp(26px, 2.5vw, 32px);
+  background-color: white;
+}
+
+.error404Page .explanation {
+  font-size: clamp(16px, 1.5vw, 24px);
+  margin-top: 12px;
+}
+
+.error404Page .explanation > span {
+  color: var(--point-color-1);
+  display: inline-block;
+  width: 32px;
+}
+
+@media screen and (max-width: 768px) {
+  .error404Page {
+    padding: 36px;
+  }
+}
+
+.error404Page .error404Page-content {
+  text-align: center;
+}
+
+.error404Page .error404Page-content > div {
+  min-width: 200px;
+  min-height: 200px;
+  margin-bottom: 2rem;
+
+  background: url("../../../assets/image/404.svg") no-repeat center;
+  background-size: contain;
+}

@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  /* 블랙 팔레트 */
+  --color-gray-0: #fff;
+  --color-gray-100: #f6f8fb;
+  --color-gray-200: #e1e4ee;
+  --color-gray-300: #cccfdb;
+  --color-gray-400: #a8adbe;
+  --color-gray-500: #828797;
+  --color-gray-600: #484d5a;
+  --color-gray-700: #000;
+
+  /* 포인트 컬러 팔레트 */
+  --color-point-main: #146247;
+  --color-point-sub: #ffafc6;
+  --color-point-error: #ff0000;
+  --color-point-text: #171c20;
+
+  /* 파란색 팔레트 */
+  --color-blue-100: #eaebff;
+  --color-blue-200: #c6c8ff;
+  --color-blue-300: #a3a6ff;
+  --color-blue-400: #7f83ff;
+  --color-blue-500: #5c61ff;
+  --color-blue-600: #383dff;
+  --color-blue-700: #0004ff;
+
+  /* 초록색 팔레트 */
+  --color-green-100: #eaffe5;
+  --color-green-200: #c6ffbf;
+  --color-green-300: #a3ff99;
+  --color-green-400: #7fff73;
+  --color-green-500: #5cff4d;
+  --color-green-600: #38ff26;
+  --color-green-700: #38d255;
+}
