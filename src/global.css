@@ -34,4 +34,8 @@
   --color-green-500: #5cff4d;
   --color-green-600: #38ff26;
   --color-green-700: #38d255;
+
+  /* 폰트 등록 */
+  --font-pretendard: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+  --font-kimm: "KIMM", ui-sans-serif, system-ui, sans-serif;
 }
