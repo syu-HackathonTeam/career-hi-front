@@ -14,7 +14,7 @@ import { api } from "./index";
  */
 export const api_signupCertification = async (phone) => {
   try {
-    const response = await api.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/verify/send`, { phoneNumber: String(phone) });
+    const response = await api.post(`/api/v1/auth/verify/send`, { phoneNumber: String(phone) });
     if (response?.data?.status === "SUCCESS") {
       return true;
     } else {
@@ -35,7 +35,7 @@ export const api_signupCertification = async (phone) => {
  */
 export const api_signup = async (data) => {
   try {
-    const response = await api.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/signup`, data);
+    const response = await api.post(`/api/v1/auth/signup`, data);
     if (response?.data?.status === "CREATED") {
       return {
         success: true,
