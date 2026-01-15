@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { api_login, api_loginCheck } from "../api/login";
+import { api_signup } from "../api/signup";
+import { api_changePassword } from "../api/changePassword";
 
 // UserContext 생성
 const LoginInfoContext = createContext(null);
@@ -26,7 +28,7 @@ export const LoginInfoProvider = ({ children }) => {
   const loginCheck = async () => {
     const now = Date.now();
     const lastValidated = loginInfo.lastValidated;
-    const isExpired = lastValidated === null || now - lastValidated > 180000; // 3분 = 180초 = 180000ms
+    const isExpired = lastValidated === null || now - lastValidated > 60000; // 1분 = 60초
 
     if (!isExpired && lastValidated !== null) {
       // 3분 이내에 검증된 경우, API 호출 없이 리턴
@@ -81,13 +83,17 @@ export const LoginInfoProvider = ({ children }) => {
     });
 
     // 로그인 시도
-    await api_login(email, password).then((res) => {
+    try {
+      const res = await api_login(email, password);
       if (res.success) {
-        setLoginInfo({
+        const next = {
           isLogin: true,
           userData: res.userInfo,
           lastValidated: Date.now(),
-        });
+        };
+        setLoginInfo(next);
+        localStorage.setItem("jwt_token", res.tokenInfo?.accessToken ?? "");
+        localStorage.setItem("refresh_token", res.tokenInfo?.refreshToken ?? "");
         return {
           success: true,
           message: "로그인에 성공했습니다.",
@@ -99,10 +105,87 @@ export const LoginInfoProvider = ({ children }) => {
           message: res?.message || "로그인에 실패했습니다.",
         };
       }
-    });
+    } catch (err) {
+      console.error(err);
+      setLoginInfo(DEFAULT_LOGIN_INFO);
+      return {
+        success: false,
+        message: "로그인에 실패했습니다.",
+      };
+    }
   };
 
-  return <LoginInfoContext.Provider value={{ loginInfo, setLoginInfo, loginCheck, login }}>{children}</LoginInfoContext.Provider>;
+  const signup = async (data) => {
+    // 로그인 상태일 때 중복 로그인 방지
+    if (loginInfo.isLogin) {
+      return {
+        success: false,
+        message: "이미 로그인된 상태입니다.",
+      };
+    }
+
+    // 로그인 상태일 때 중복 로그인 방지
+    await loginCheck().then((res) => {
+      if (res?.success) {
+        return {
+          success: false,
+          message: "이미 로그인된 상태입니다.",
+        };
+      }
+    });
+    // 회원가입 시도
+    try {
+      const res = await api_signup(data);
+      if (res.success) {
+        const next = {
+          isLogin: true,
+          userData: res.userInfo,
+          lastValidated: Date.now(),
+        };
+        setLoginInfo(next);
+        localStorage.setItem("jwt_token", res.tokenInfo?.accessToken ?? "");
+        localStorage.setItem("refresh_token", res.tokenInfo?.refreshToken ?? "");
+        return {
+          success: true,
+          message: "회원가입에 성공했습니다.",
+        };
+      } else {
+        setLoginInfo(DEFAULT_LOGIN_INFO);
+        return {
+          success: false,
+          message: res?.message || "로그인에 실패했습니다.",
+        };
+      }
+    } catch (err) {
+      console.error(err);
+      setLoginInfo(DEFAULT_LOGIN_INFO);
+      return {
+        success: false,
+        message: "로그인에 실패했습니다.",
+      };
+    }
+  };
+
+  const changePassword = async (data) => {
+    // 로그인 상태일 때 중복 로그인 방지
+    if (loginInfo.isLogin) {
+      return {
+        success: false,
+        message: "이미 로그인된 상태입니다.",
+      };
+    }
+
+    // 비밀번호 변경
+    try {
+      const res = await api_changePassword(data);
+      return res;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  };
+
+  return <LoginInfoContext.Provider value={{ loginInfo, setLoginInfo, loginCheck, login, signup, changePassword }}>{children}</LoginInfoContext.Provider>;
 };
 
 // Context를 쉽게 사용하기 위한 커스텀 훅
@@ -115,5 +198,8 @@ export const LoginInfoProvider = ({ children }) => {
  * - loginInfo: { isLogin, userData, lastValidated }
  * - setLoginInfo: 상태 변경 함수
  * - loginCheck: 로그인 상태를 서버에서 검증하는 비동기 함수
+ * - login: 이메일/비밀번호로 로그인 요청을 수행하는 비동기 함수
+ * - signup: 회원가입 요청을 수행하는 비동기 함수
+ * - changePassword: 비밀번호 변경 요청을 수행하는 비동기 함수
  */
 export const useLoginInfo = () => useContext(LoginInfoContext);

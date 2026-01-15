@@ -80,7 +80,9 @@ const LoginPage = () => {
             error={passwordError}
           />
         </div>
-        <p className="B4 text-gray-500 cursor-pointer border-b-[1px] w-fit">비밀번호를 잊어버렸습니다</p>
+        <p onClick={() => nav("/find-password")} className="B4 text-gray-500 cursor-pointer border-b-[1px] w-fit">
+          비밀번호를 잊어버렸습니다
+        </p>
       </div>
       <div className="w-full max-w-[420px] mt-6 flexWidthCenter">
         <div onClick={onClickLogin} className="w-full">

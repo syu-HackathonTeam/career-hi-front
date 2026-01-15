@@ -11,7 +11,7 @@ import { useLoginInfo } from "../../context/LoginInfoContext";
 import useAlertCP from "../../hook/useAlertCP";
 import AlertCP from "../../component/_common/alertCP";
 
-const SignUpPage = () => {
+const ChangePasswordPage = () => {
   const nav = useNavigate();
   // 알럴트
   const [isAlertOpen, alertTitleText, alertButtonText, setAlertTitleText, setAlertButtonText, closeAlert, openAlert] = useAlertCP();
@@ -19,31 +19,31 @@ const SignUpPage = () => {
   // 입력 상태들
   const [name, onChangeName] = useInput("");
   const [email, onChangeEmail] = useInput("");
-  const [password, onChangePassword, setPassword] = useInput("");
-  const [confirmPassword, onChangeConfirmPassword] = useInput("");
+  const [newPassword, onChangeNewPassword, setNewPassword] = useInput("");
+  const [confirmNewPassword, onChangeConfirmNewPassword] = useInput("");
   const [phone, onChangePhone] = useInput("");
   const [verificationCode, onChangeVerificationCode] = useInput("");
   const [verificationRequested, setVerificationRequested] = useState(false);
-  const [marketingAgree, setMarketingAgree] = useState(false);
 
   // 에러 상태들
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [newPasswordError, setNewPasswordError] = useState(false);
+  const [confirmNewPasswordError, setConfirmNewPasswordError] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
   const [verificationCodeError, setVerificationCodeError] = useState(false);
+  const [alertUrl, setAlertUrl] = useState(".");
 
   // 전역변수
-  const { loginInfo, setLoginInfo, signup } = useLoginInfo();
+  const { changePassword } = useLoginInfo();
 
   // 인증번호 발송/쿨 다운 상태
   const [cooldownLeft, setCooldownLeft] = useState(0); // 인증 재요청 쿨 다운 남은 초
 
   const validateName = useCallback((value) => value.trim().length > 0, []);
   const validateEmail = useCallback((email) => email.includes("@") && email.includes("."), []);
-  const validatePassword = useCallback((pwd) => /^[A-Za-z0-9\-!@#]{6,16}$/.test(pwd), []);
-  const validateConfirmPassword = useCallback((value) => value.length > 0 && value === password, [password]);
+  const validateNewPassword = useCallback((pwd) => /^[A-Za-z0-9\-!@#]{6,16}$/.test(pwd), []);
+  const validateConfirmNewPassword = useCallback((value) => value.length > 0 && value === newPassword, [newPassword]);
   const validatePhone = useCallback((value) => /^010\d{8}$/.test(value), []);
   const validateVerificationCode = useCallback((value) => /^\d{6}$/.test(value), []);
 
@@ -72,8 +72,8 @@ const SignUpPage = () => {
   const onClickSignUp = useCallback(async () => {
     const nameValid = validateName(name);
     const emailValid = validateEmail(email);
-    const passwordValid = validatePassword(password);
-    const confirmPasswordValid = validateConfirmPassword(confirmPassword);
+    const newPasswordValid = validateNewPassword(newPassword);
+    const confirmNewPasswordValid = validateConfirmNewPassword(confirmNewPassword);
     const phoneValid = validatePhone(phone);
     const isVerificationEmpty = verificationCode.trim().length === 0;
     const verificationCodeValid = !isVerificationEmpty && validateVerificationCode(verificationCode);
@@ -81,45 +81,47 @@ const SignUpPage = () => {
 
     setNameError(!nameValid);
     setEmailError(!emailValid);
-    setPasswordError(!passwordValid);
-    setConfirmPasswordError(!confirmPasswordValid);
+    setNewPasswordError(!newPasswordValid);
+    setConfirmNewPasswordError(!confirmNewPasswordValid);
     setPhoneError(!phoneValid);
     setVerificationCodeError(isVerificationEmpty || !verificationCodeValid || !verificationSentValid);
 
-    if (!nameValid || !emailValid || !passwordValid || !confirmPasswordValid || !phoneValid || !verificationCodeValid || !verificationSentValid) {
+    if (!nameValid || !emailValid || !newPasswordValid || !confirmNewPasswordValid || !phoneValid || !verificationCodeValid || !verificationSentValid) {
       if (isVerificationEmpty) {
         alert("인증번호를 입력해 주세요");
         return;
       }
 
-      if (!passwordValid) setPassword("");
+      if (!newPasswordValid) setNewPassword("");
       return;
     }
 
     const data = {
       name: name,
       email: email,
-      password: password,
+      password: newPassword,
       phoneNumber: phone,
       authCode: verificationCode,
-      marketingAgreed: marketingAgree,
     };
 
     try {
-      const result = await signup(data);
+      const result = await changePassword(data);
       if (result.success) {
-        setAlertTitleText("가입이 완료되었습니다");
-        setAlertButtonText("메인 페이지");
+        setAlertTitleText("비밀번호 변경이 완료되었습니다");
+        setAlertButtonText("로그인");
+        setAlertUrl("/login");
         openAlert();
       } else {
         setAlertTitleText(result.message || "회원가입에 실패했습니다");
         setAlertButtonText("확인");
+        setAlertUrl(".");
         openAlert();
       }
     } catch (err) {
       console.error(err);
       setAlertTitleText("회원가입 중 오류가 발생했습니다");
       setAlertButtonText("확인");
+      setAlertUrl(".");
       openAlert();
     }
   }, [
@@ -128,20 +130,19 @@ const SignUpPage = () => {
     openAlert,
     name,
     email,
-    password,
-    confirmPassword,
+    newPassword,
+    confirmNewPassword,
     phone,
     verificationCode,
     verificationRequested,
-    setPassword,
-    marketingAgree,
+    setNewPassword,
+    changePassword,
     validateName,
     validateEmail,
-    validatePassword,
-    validateConfirmPassword,
+    validateNewPassword,
+    validateConfirmNewPassword,
     validatePhone,
     validateVerificationCode,
-    signup,
   ]);
 
   /**
@@ -170,14 +171,14 @@ const SignUpPage = () => {
           closeButton={closeAlert}
           okButton={() => {
             closeAlert();
-            nav("/");
+            nav(`${alertUrl}`);
           }}
         />
       )}
       {/* 콘텐츠 */}
       <div className="w-full flex flexHeightCenter gap-8">
         <img src={logo_image} alt="LOGO" id="loginPage-logo" className=" w-1/3 max-w-25 p-1.5 border rounded-3xl border-gray-200" />
-        <p className="H2_bold">회원가입</p>
+        <p className="H2_bold">비밀번호 찾기</p>
       </div>
 
       <div className="border-b border-gray-200 w-full max-w-105">{/* 밑줄 */}</div>
@@ -214,49 +215,36 @@ const SignUpPage = () => {
             />
           </div>
         )}
-        <div className="w-full">
+        <div className="w-full mt-3">
           {/* 비밀번호 */}
           <InputCP
-            placeholder="비밀번호 *"
-            value={password}
-            onChangeValue={onChangePassword}
+            placeholder="새 비밀번호 *"
+            value={newPassword}
+            onChangeValue={onChangeNewPassword}
             type="password"
-            errorText="비밀번호는 6~16자 영문, 숫자, 특수문자(-!@#)만 가능합니다"
-            error={passwordError}
+            errorText="새 비밀번호는 6~16자 영문, 숫자, 특수문자(-!@#)만 가능합니다"
+            error={newPasswordError}
           />
         </div>
         <div className="w-full">
           {/* 비밀번호 확인 */}
           <InputCP
-            placeholder="비밀번호 확인 *"
-            value={confirmPassword}
-            onChangeValue={onChangeConfirmPassword}
+            placeholder="새 비밀번호 확인 *"
+            value={confirmNewPassword}
+            onChangeValue={onChangeConfirmNewPassword}
             type="password"
-            errorText="비밀번호가 일치하지 않습니다"
-            error={confirmPasswordError}
+            errorText="새 비밀번호가 일치하지 않습니다"
+            error={confirmNewPasswordError}
           />
         </div>
-        <form className="cursor-pointer">
-          <input
-            type="checkbox"
-            id="marketingAgree"
-            name="marketingAgree"
-            className="cursor-pointer"
-            checked={marketingAgree}
-            onChange={() => setMarketingAgree((prev) => !prev)}
-          />
-          <label htmlFor="marketingAgree" className="ml-2 B4 text-gray-500 cursor-pointer">
-            마케팅 정보 수신에 동의합니다 (선택)
-          </label>
-        </form>
       </div>
 
       <div className="w-full max-w-105 mt-6 flexWidthCenter" onClick={onClickSignUp}>
         <ButtonCP bg="bg-point-text" color="text-white">
-          회원가입
+          비밀번호 변경
         </ButtonCP>
       </div>
     </LoginLayout>
   );
 };
-export default SignUpPage;
+export default ChangePasswordPage;
