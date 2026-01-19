@@ -54,7 +54,7 @@ const LoginPage = () => {
     <LoginLayout>
       {/* 콘텐츠 */}
       <div className="w-full flex flexHeightCenter gap-8">
-        <img src={logo_image} alt="LOGO" id="loginPage-logo" className=" w-1/3 max-w-[100px] p-1.5 border-1 rounded-3xl border-gray-200" />
+        <img src={logo_image} alt="LOGO" id="loginPage-logo" className=" w-1/3 max-w-25 p-1.5 border rounded-3xl border-gray-200" />
         <p className="H2_bold">로그인</p>
       </div>
       <div className="w-full hidden md:black">
@@ -63,8 +63,8 @@ const LoginPage = () => {
           <span>카카오 로그인</span>
         </ButtonCP>
       </div>
-      <div className="hidden md:black border-b-[1px] border-gray-200 w-full max-w-[420px]">{/* 밑줄 */}</div>
-      <div className="w-full max-w-[420px] flex flex-col justify-center gap-2">
+      <div className="hidden md:black border-b border-gray-200 w-full max-w-105">{/* 밑줄 */}</div>
+      <div className="w-full max-w-105 flex flex-col justify-center gap-2">
         <div className="w-full">
           {/* 이메일 */}
           <InputCP placeholder="이메일" value={email} onChangeValue={onChangeEmail} errorText="이메일 형식이 올바르지 않습니다" error={emailError} />
@@ -80,11 +80,11 @@ const LoginPage = () => {
             error={passwordError}
           />
         </div>
-        <p onClick={() => nav("/find-password")} className="B4 text-gray-500 cursor-pointer border-b-[1px] w-fit">
+        <p onClick={() => nav("/find-password")} className="B4 text-gray-500 cursor-pointer border-b w-fit">
           비밀번호를 잊어버렸습니다
         </p>
       </div>
-      <div className="w-full max-w-[420px] mt-6 flexWidthCenter">
+      <div className="w-full max-w-105 mt-6 flexWidthCenter">
         <div onClick={onClickLogin} className="w-full">
           <ButtonCP bg="bg-point-text" color="text-white">
             로그인
@@ -94,10 +94,10 @@ const LoginPage = () => {
           회원가입
         </p>
       </div>
-      <div className="md:hidden black border-b-[1px] border-gray-200 w-full max-w-[420px]">{/* 밑줄 */}</div>
+      <div className="md:hidden black border-b border-gray-200 w-full max-w-105">{/* 밑줄 */}</div>
       <div className="flexWidthCenter gap-2.5">
         <p>간편 로그인</p>
-        <div className="bg-[#FEE500] w-[52px] h-[52px] rounded-full flexCenter text-2xl">
+        <div className="bg-[#FEE500] w-13 h-13 rounded-full flexCenter text-2xl">
           <FontAwesomeIcon icon={faKakaoTalk} className="" />
         </div>
       </div>

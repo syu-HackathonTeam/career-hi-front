@@ -87,6 +87,12 @@ main {
   margin: 0;
   padding: 0;
 } */
+* {
+  scrollbar-width: thin; /* Firefox */
+}
+header {
+  z-index: 999;
+}
 
 ol,
 ul {
@@ -159,83 +165,83 @@ a:active {
 
 /* 텍스트 */
 .B1 {
-  font-family: var(--font-pretendard);
-  font-size: 1.1875rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 100.305%; /* 1.19113rem */
+  font-family: var(--font-pretendard) !important;
+  font-size: 1.1875rem !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  line-height: 100.305% !important; /* 1.19113rem */
 }
 .B2 {
-  font-family: var(--font-pretendard);
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
+  font-family: var(--font-pretendard) !important;
+  font-size: 1rem !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  line-height: normal !important;
 }
 .B2_bold {
-  font-family: var(--font-pretendard);
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
+  font-family: var(--font-pretendard) !important;
+  font-size: 1rem !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  line-height: normal !important;
 }
 .B3 {
-  font-family: var(--font-pretendard);
-  font-size: 0.9375rem;
-  font-style: normal;
-  font-weight: 300;
-  line-height: normal;
+  font-family: var(--font-pretendard) !important;
+  font-size: 0.9375rem !important;
+  font-style: normal !important;
+  font-weight: 300 !important;
+  line-height: normal !important;
 }
 .B3_bold {
-  font-family: var(--font-pretendard);
-  font-size: 0.9375rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
+  font-family: var(--font-pretendard) !important;
+  font-size: 0.9375rem !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  line-height: normal !important;
 }
 .B4 {
-  font-family: var(--font-pretendard);
-  font-size: 0.8125rem;
-  font-style: normal;
-  font-weight: 300;
-  line-height: normal;
+  font-family: var(--font-pretendard) !important;
+  font-size: 0.8125rem !important;
+  font-style: normal !important;
+  font-weight: 300 !important;
+  line-height: normal !important;
 }
 .B4_bold {
-  font-family: var(--font-pretendard);
-  font-size: 0.8125rem;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
+  font-family: var(--font-pretendard) !important;
+  font-size: 0.8125rem !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  line-height: normal !important;
 }
 
 .H1 {
-  font-family: var(--font-pretendard);
-  font-size: 2rem;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 2.8125rem; /* 140.625% */
+  font-family: var(--font-pretendard) !important;
+  font-size: 2rem !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  line-height: 2.8125rem !important; /* 140.625% */
 }
 
 .H2 {
-  font-family: var(--font-pretendard);
-  font-size: 1.5rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 2.1875rem; /* 145.833% */
+  font-family: var(--font-pretendard) !important;
+  font-size: 1.5rem !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  line-height: 2.1875rem !important; /* 145.833% */
 }
 .H2_bold {
-  font-family: var(--font-pretendard);
-  font-size: 1.5rem;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 2.1875rem; /* 145.833% */
+  font-family: var(--font-pretendard) !important;
+  font-size: 1.5rem !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  line-height: 2.1875rem !important; /* 145.833% */
 }
 .H3_bold {
-  font-family: var(--font-pretendard);
-  font-size: 1.1875rem;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
+  font-family: var(--font-pretendard) !important;
+  font-size: 1.1875rem !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  line-height: normal !important;
 }
 
 .Text_M1 {
@@ -276,4 +282,10 @@ a:active {
   font-style: normal;
   font-weight: 300;
   line-height: normal;
+}
+
+@media (max-width: 1400px) {
+  .isMobileHidden {
+    display: none !important;
+  }
 }

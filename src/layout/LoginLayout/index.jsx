@@ -20,7 +20,7 @@ const LoginLayout = ({ children }) => {
         </div>
         <div className="w-full md:w-1/2 h-full flexCenter relative overflow-y-auto">
           {/* 콘텐츠 */}
-          <div className="w-3/4 md:w-1/2 h-full flex flex-col gap-7 justify-center items-center relative">{children}</div>
+          <div className="w-full md:w-1/2 h-full flex flex-col gap-7 justify-center items-center relative">{children}</div>
         </div>
       </div>
     </MainLayout>

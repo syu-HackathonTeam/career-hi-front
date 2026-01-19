@@ -14,8 +14,10 @@
   /* 포인트 컬러 팔레트 */
   --color-point-main: #146247;
   --color-point-sub: #ffafc6;
+  --color-point-sub-bold: #fe7ba0;
   --color-point-error: #ff0000;
   --color-point-text: #171c20;
+  --color-point-footerBG: #fbfdff;
 
   /* 파란색 팔레트 */
   --color-blue-100: #eaebff;

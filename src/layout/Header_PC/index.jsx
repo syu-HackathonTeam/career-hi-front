@@ -15,7 +15,7 @@ const HeaderPc = () => {
   const isLogin = loginInfo.isLogin;
 
   return (
-    <header className="w-full h-[5.125rem] bg-gray-100 flex justify-between items-center px-[2vw] select-none">
+    <header className="w-full h-[5.125rem] bg-gray-100 flex justify-between items-center px-[2vw] select-none relative">
       <LogoCP />
       {isLogin && (
         <div className="flex items-center gap-3">

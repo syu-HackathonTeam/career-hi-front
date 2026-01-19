@@ -13,8 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
  */
 const AlertCP = ({ titleText = "AlertTitle", buttonText = "AlertButton", closeButton, okButton }) => {
   return (
-    <div className="w-screen select-none h-screen z-[999] bg-[#171C20BF] fixed flexCenter">
-      <div className="relative w-80 h-45 bg-white min-h-[200px] rounded-lg p-10 flex flex-col justify-between">
+    <div className="w-screen select-none h-screen z-999 bg-[#171C20BF] fixed flexCenter">
+      <div className="relative w-80 h-45 bg-white min-h-50 rounded-lg p-10 flex flex-col justify-between">
         {/* xMark */}
         <div onClick={() => closeButton()} className="absolute top-6 right-6 cursor-pointer text-gray-400">
           <FontAwesomeIcon icon={faXmark} />
