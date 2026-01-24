@@ -1,0 +1,43 @@
+.MyRoadmapCreatePage .inputForm > p {
+  margin-bottom: 2rem;
+  caret-color: transparent;
+}
+
+.MyRoadmapCreatePage .inputForm > p:not(:first-child) {
+  margin-bottom: 2rem;
+  margin-top: 4rem;
+  caret-color: transparent;
+}
+
+.MyRoadmapCreatePage .inputForm > div {
+  margin-bottom: 2rem;
+}
+
+.MyRoadmapCreatePage .inputForm > div > p:first-child {
+  margin-bottom: 12px;
+  caret-color: transparent;
+  position: relative;
+}
+
+.MyRoadmapCreatePage .inputForm > div > p:first-child > span {
+  color: var(--color-orange-400);
+  margin-left: 4px;
+}
+
+.MyRoadmapCreatePage .inputForm > div > div:first-child.plusForm {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  caret-color: transparent;
+  position: relative;
+}
+
+.MyRoadmapCreatePage .inputForm > div > div:first-child.plusForm > .plusButton {
+  cursor: pointer;
+  color: var(--color-point-sub-bold);
+  background-color: #fff2f5;
+  padding: 0.5rem 0.875rem;
+  border-radius: 999px;
+}

@@ -1,8 +1,17 @@
+// 희망 직군
+export const data_hopeJobGroup = ["ITㆍ데이터"];
+
+// 희망 직군 - 세부사항
+export const data_hopeJobDetail = {
+  // ITㆍ데이터
+  0: ["개발 PM", "데이터 분석", "프론트엔드", "백엔드", "데이터 엔지니어", "보안"],
+};
+
 // 최종 학력
 export const data_univLevel = ["초등학교 졸업", "중학교 졸업", "고등학교 졸업", "대학교 이상 졸업"];
 
 // 대학 종류
-export const data_univType = ["대학교 (2, 3년제)", "대학교 (4년제)", "대학교 (5년제)", "대학교 (6년제 이상)", "대학원 (석사)", "대학원 (박사)"];
+export const data_univType = ["대학교 진학X", "대학교 (2, 3년제)", "대학교 (4년제)", "대학교 (5년제)", "대학교 (6년제 이상)", "대학원 (석사)", "대학원 (박사)"];
 
 // 학적 상태
 export const data_univSituation = ["재학", "휴학", "졸업", "졸업유예", "중퇴"];

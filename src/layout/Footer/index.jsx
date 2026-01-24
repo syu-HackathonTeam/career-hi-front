@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="w-full h-87.25 bg-point-footerBG p-[5%] flex flex-col justify-between select-none">
       {/* 이름 */}
-      <div className="flex justify-between">
+      <div className="flex flex-col items-center gap-4 sm:flex-row justify-between">
         <div className="flex gap-5 text-gray-500">
           <p className="B3_bold">FE</p>
           <p className="flex gap-3 B3 text-gray-400">

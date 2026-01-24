@@ -196,14 +196,14 @@ a:active {
   font-family: var(--font-pretendard) !important;
   font-size: 0.9375rem !important;
   font-style: normal !important;
-  font-weight: 600 !important;
+  font-weight: 600;
   line-height: normal !important;
 }
 .B4 {
   font-family: var(--font-pretendard) !important;
   font-size: 0.8125rem !important;
   font-style: normal !important;
-  font-weight: 300 !important;
+  font-weight: 300;
   line-height: normal !important;
 }
 .B4_bold {

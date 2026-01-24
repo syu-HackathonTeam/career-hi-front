@@ -12,11 +12,11 @@ const MainContentLayout = ({ children, page = "main", fixed = false, scroll = fa
 
   return (
     <section
-      className={`z-50 h-[calc(100vh-5.125rem)] min-h-[calc(100vh-5.125rem)] w-full bg-gray-100 flex items-stretch select-none overflow-hidden relative ${
+      className={`z-40 h-[calc(100vh-5.125rem)] min-h-[calc(100vh-5.125rem)] w-full bg-gray-100 flex items-stretch select-none overflow-hidden relative ${
         scroll ? "overflow-y-auto" : ""
       }`}>
       {/* 왼쪽 영역 (남는 공간의 절반) */}
-      <aside className={`z-90 flex-1 box-border px-[2vw] pt-14 h-[calc(100vh-5.125rem)] ${fixed ? "fixed top-20.5 w-[calc(50vw/2)]" : "relative"}`}>
+      <aside className={`z-45 flex-1 box-border px-[2vw] pt-14 h-[calc(100vh-5.125rem)] ${fixed ? "fixed top-20.5 w-[calc(50vw/2)]" : "relative"}`}>
         <div className="flex flex-col gap-1.5">
           <div
             onClick={() => nav("/")}
@@ -46,7 +46,7 @@ const MainContentLayout = ({ children, page = "main", fixed = false, scroll = fa
       {/* 가운데 콘텐츠 (min~max 사이로 유지) */}
       <div className="box-border flex-none min-w-[50vw] w-full max-w-215">
         <main
-          className={`box-border flex-none ${
+          className={`z-50 relative box-border flex-none ${
             scroll ? "min-h-[calc(100vh-5.125rem)]" : "pb-0 h-[calc(100vh-5.125rem)]"
           } bg-white rounded-t-3xl p-14 min-w-[50vw] w-full max-w-215`}>
           {children}

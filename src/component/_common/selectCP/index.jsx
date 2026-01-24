@@ -7,38 +7,24 @@ const SelectCP = ({ value, setValue, selectList, placeholder = "", disabled = fa
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative w-full max-h-13 overflow-y-visible">
+    <div className="relative w-full max-h-12 overflow-y-visible">
       <div
-        className="SelectCP  z-10 flex px-5 flex-nowrap gap-3 items-center cursor-pointer rounded-lg border border-gray-300 relative bg-white"
+        style={{
+          opacity: disabled ? 0.5 : 1,
+        }}
+        className="SelectCP z-10 flex px-5 flex-nowrap gap-3 items-center cursor-pointer rounded-lg border border-gray-300 relative bg-white"
         onFocus={() => setIsOpen(true)}
-        onBlur={() => setIsOpen(false)}>
-        {/* onBlur={() => setTimeout(() => setIsOpen(false), 100)}> */}
+        onBlur={() => setTimeout(() => setIsOpen(false), 100)}>
         <input
-          style={{
-            backgroundColor: disabled ? "#d6d6d6" : "white",
-          }}
           type="text"
-          className="B3 h-12.5 cursor-pointer text-point-text flex-1 w-full outline-none border-0 caret-transparent"
+          className="B4 h-11.5 cursor-pointer text-point-text flex-1 w-full outline-none border-0 caret-transparent"
           value={value}
+          readOnly
           disabled={disabled}
           placeholder={placeholder}
         />
-        {isOpen && (
-          <FontAwesomeIcon
-            icon={faCaretUp}
-            onClick={() => {
-              setIsOpen((v) => !v);
-            }}
-          />
-        )}
-        {!isOpen && (
-          <FontAwesomeIcon
-            icon={faCaretDown}
-            onClick={() => {
-              setIsOpen((v) => !v);
-            }}
-          />
-        )}
+        {isOpen && <FontAwesomeIcon icon={faCaretUp} className="text-gray-500" />}
+        {!isOpen && <FontAwesomeIcon icon={faCaretDown} className="text-gray-500" />}
       </div>
 
       {/* 셀렉트박스 */}
@@ -48,11 +34,11 @@ const SelectCP = ({ value, setValue, selectList, placeholder = "", disabled = fa
             {selectList.map((item, index) => (
               <div
                 onClick={() => {
-                  setIsOpen(false);
                   setValue(item);
+                  setIsOpen(false);
                 }}
                 key={index}
-                className="mb-2 last:mb-0 cursor-pointer B3 px-2.5 py-1 rounded-sm"
+                className="mb-2 last:mb-0 cursor-pointer B4 px-2.5 py-1 rounded-sm"
                 style={{
                   backgroundColor: item === value ? "#FFF2F5" : "withe",
                   color: item === value ? "var(--color-point-sub-bold)" : "var(--color-point-text)",

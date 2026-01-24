@@ -12,17 +12,17 @@
  */
 const InputCP = ({ placeholder, value, onChangeValue, type = "text", disabled = false, errorText = "", error = false }) => {
   return (
-    <div>
+    <div
+      style={{
+        opacity: disabled ? 0.5 : 1,
+      }}>
       <input
-        style={{
-          backgroundColor: disabled ? "#d6d6d6" : "white",
-        }}
         disabled={disabled}
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChangeValue}
-        className="B3 text-point-text w-full py-4 px-5 rounded-lg border-[1px] border-gray-300 focus:border-gray-500 focus:outline-none"
+        className="B4 text-point-text w-full h-12 py-4 px-5 rounded-lg border border-gray-300 focus:border-gray-500 focus:outline-none"
       />
       {error && <p className="text-[12px] text-point-error pt-1">{errorText}</p>}
     </div>
