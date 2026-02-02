@@ -41,3 +41,15 @@
   --font-pretendard: "Pretendard", ui-sans-serif, system-ui, sans-serif;
   --font-kimm: "KIMM", ui-sans-serif, system-ui, sans-serif;
 }
+
+/* ApexCharts tooltip: 기본 배경/테두리 제거 (커스텀 div만 보이게) */
+.apexcharts-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.apexcharts-tooltip-title {
+  display: none !important;
+}

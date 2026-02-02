@@ -84,7 +84,7 @@ export const LoginInfoProvider = ({ children }) => {
 
     // 로그인 시도
     try {
-      const res = await api_login(email, password);
+      const res = await api_login({ email, password });
       if (res.success) {
         const next = {
           isLogin: true,

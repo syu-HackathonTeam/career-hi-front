@@ -45,6 +45,8 @@ const LoginPage = () => {
       return;
     }
 
+    // TODO: 로그인 API 요청
+
     setPasswordError(false);
     setEmailError(false);
 

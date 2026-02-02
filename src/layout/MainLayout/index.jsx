@@ -33,7 +33,7 @@ const MainContentLayout = ({ children, page = "main", fixed = false, scroll = fa
             <FontAwesomeIcon icon={faPaste} className={`${page === "roadmap" ? "text-point-sub" : ""} pr-3`} /> 나의 로드맵 알아보기
           </div>
           <div
-            onClick={() => nav("/")}
+            onClick={() => nav("/roadmap/list")}
             className={`isMobileHidden flex items-center transition-colors duration-200 w-full max-w-[16vw] cursor-pointer select-none hover:bg-white h-14 rounded-2xl px-[10%] B2_bold ${
               page === "roadmap_list" ? "bg-white" : "bg-gray-100 text-gray-400"
             }`}>
@@ -44,11 +44,11 @@ const MainContentLayout = ({ children, page = "main", fixed = false, scroll = fa
       </aside>
       {fixed && <aside className={`flex-1 h-[calc(100vh-5.125rem)] box-border px-[2vw] pt-14 flex flex-col gap-1.5`}></aside>}
       {/* 가운데 콘텐츠 (min~max 사이로 유지) */}
-      <div className="box-border flex-none min-w-[50vw] w-full max-w-215">
+      <div className="box-border flex-none w-full max-w-215">
         <main
           className={`z-50 relative box-border flex-none ${
             scroll ? "min-h-[calc(100vh-5.125rem)]" : "pb-0 h-[calc(100vh-5.125rem)]"
-          } bg-white rounded-t-3xl p-14 min-w-[50vw] w-full max-w-215`}>
+          } bg-white rounded-t-3xl p-14 w-full max-w-215`}>
           {children}
         </main>
         <Footer />
