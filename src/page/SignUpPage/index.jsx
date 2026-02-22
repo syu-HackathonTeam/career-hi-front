@@ -6,7 +6,7 @@ import { useInput } from "../../hook/useInput";
 import ButtonCP from "../../component/_common/buttonCP";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import LoginLayout from "../../layout/LoginLayout";
-import { api_signupCertification } from "../../api/signup";
+import { api_signupCertification, api_verifyCode } from "../../api/signup";
 import { useLoginInfo } from "../../context/LoginInfoContext";
 import useAlertCP from "../../hook/useAlertCP";
 import AlertCP from "../../component/_common/alertCP";
@@ -35,7 +35,7 @@ const SignUpPage = () => {
   const [verificationCodeError, setVerificationCodeError] = useState(false);
 
   // 전역변수
-  const { loginInfo, setLoginInfo, signup } = useLoginInfo();
+  const { signup } = useLoginInfo();
 
   // 인증번호 발송/쿨 다운 상태
   const [cooldownLeft, setCooldownLeft] = useState(0); // 인증 재요청 쿨 다운 남은 초
@@ -96,6 +96,20 @@ const SignUpPage = () => {
       return;
     }
 
+    const verifyResult = await api_verifyCode({
+      phoneNumber: phone,
+      authCode: verificationCode,
+      type: "SIGNUP",
+    });
+
+    if (!verifyResult?.success) {
+      setVerificationCodeError(true);
+      setAlertTitleText(verifyResult?.message || "인증번호가 일치하지 않습니다.");
+      setAlertButtonText("확인");
+      openAlert();
+      return;
+    }
+
     const data = {
       name: name,
       email: email,
@@ -152,12 +166,16 @@ const SignUpPage = () => {
     setPhoneError(!phoneValid);
     if (!phoneValid || cooldownLeft > 0) return;
 
-    const ok = await api_signupCertification(phone); // 비동기 응답 후 쿨 다운 시작
-    console.log(ok);
-    if (ok) {
+    const result = await api_signupCertification(phone, "SIGNUP");
+    if (result?.success) {
       setVerificationRequested(true);
-      setCooldownLeft(180);
+      setCooldownLeft(result?.expiryTime ?? 180);
+      return;
     }
+
+    setAlertTitleText(result?.message || "인증번호 발송에 실패했습니다");
+    setAlertButtonText("확인");
+    openAlert();
   }, [cooldownLeft, phone, validatePhone]);
 
   return (
@@ -202,7 +220,7 @@ const SignUpPage = () => {
             </ButtonCP>
           </div>
         </div>
-        {isCooldownActive && (
+        {verificationRequested && (
           <div className="w-full">
             {/* 인증번호 */}
             <InputCP

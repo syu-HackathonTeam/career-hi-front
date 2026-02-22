@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 import { api_login, api_loginCheck } from "../api/login";
 import { api_signup } from "../api/signup";
 import { api_changePassword } from "../api/changePassword";
+import { clearTokenInfo, setTokenInfo } from "../api";
 
 // UserContext 생성
 const LoginInfoContext = createContext(null);
@@ -20,6 +21,12 @@ const DEFAULT_LOGIN_INFO = {
 // UserProvider 컴포넌트
 export const LoginInfoProvider = ({ children }) => {
   const [loginInfo, setLoginInfo] = useState(DEFAULT_LOGIN_INFO);
+
+  const clearLegacyUserStorage = () => {
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("user_email");
+  };
 
   /**
    * 최근 검증 시점과 비교하여 필요할 때만 서버에 로그인 상태를 확인한다.
@@ -44,15 +51,19 @@ export const LoginInfoProvider = ({ children }) => {
           lastValidated: Date.now(),
         };
         setLoginInfo(next);
-        localStorage.setItem("jwt_token", res.tokenInfo?.accessToken ?? "");
-        localStorage.setItem("refresh_token", res.tokenInfo?.refreshToken ?? "");
+        setTokenInfo(res.tokenInfo);
+        clearLegacyUserStorage();
         return next;
       }
       setLoginInfo(DEFAULT_LOGIN_INFO);
+      clearTokenInfo();
+      clearLegacyUserStorage();
       return DEFAULT_LOGIN_INFO;
     } catch (err) {
       console.error("Login check failed:", err);
       setLoginInfo(DEFAULT_LOGIN_INFO);
+      clearTokenInfo();
+      clearLegacyUserStorage();
       return DEFAULT_LOGIN_INFO;
     }
   };
@@ -74,7 +85,7 @@ export const LoginInfoProvider = ({ children }) => {
 
     // 로그인 상태일 때 중복 로그인 방지
     await loginCheck().then((res) => {
-      if (res?.success) {
+      if (res?.isLogin) {
         return {
           success: false,
           message: "이미 로그인된 상태입니다.",
@@ -92,14 +103,16 @@ export const LoginInfoProvider = ({ children }) => {
           lastValidated: Date.now(),
         };
         setLoginInfo(next);
-        localStorage.setItem("jwt_token", res.tokenInfo?.accessToken ?? "");
-        localStorage.setItem("refresh_token", res.tokenInfo?.refreshToken ?? "");
+        setTokenInfo(res.tokenInfo);
+        clearLegacyUserStorage();
         return {
           success: true,
-          message: "로그인에 성공했습니다.",
+          message: res?.message || "로그인에 성공했습니다.",
         };
       } else {
         setLoginInfo(DEFAULT_LOGIN_INFO);
+        clearTokenInfo();
+        clearLegacyUserStorage();
         return {
           success: false,
           message: res?.message || "로그인에 실패했습니다.",
@@ -108,6 +121,8 @@ export const LoginInfoProvider = ({ children }) => {
     } catch (err) {
       console.error(err);
       setLoginInfo(DEFAULT_LOGIN_INFO);
+      clearTokenInfo();
+      clearLegacyUserStorage();
       return {
         success: false,
         message: "로그인에 실패했습니다.",
@@ -126,7 +141,7 @@ export const LoginInfoProvider = ({ children }) => {
 
     // 로그인 상태일 때 중복 로그인 방지
     await loginCheck().then((res) => {
-      if (res?.success) {
+      if (res?.isLogin) {
         return {
           success: false,
           message: "이미 로그인된 상태입니다.",
@@ -143,25 +158,29 @@ export const LoginInfoProvider = ({ children }) => {
           lastValidated: Date.now(),
         };
         setLoginInfo(next);
-        localStorage.setItem("jwt_token", res.tokenInfo?.accessToken ?? "");
-        localStorage.setItem("refresh_token", res.tokenInfo?.refreshToken ?? "");
+        setTokenInfo(res.tokenInfo);
+        clearLegacyUserStorage();
         return {
           success: true,
-          message: "회원가입에 성공했습니다.",
+          message: res?.message || "회원가입에 성공했습니다.",
         };
       } else {
         setLoginInfo(DEFAULT_LOGIN_INFO);
+        clearTokenInfo();
+        clearLegacyUserStorage();
         return {
           success: false,
-          message: res?.message || "로그인에 실패했습니다.",
+          message: res?.message || "회원가입에 실패했습니다.",
         };
       }
     } catch (err) {
       console.error(err);
       setLoginInfo(DEFAULT_LOGIN_INFO);
+      clearTokenInfo();
+      clearLegacyUserStorage();
       return {
         success: false,
-        message: "로그인에 실패했습니다.",
+        message: "회원가입에 실패했습니다.",
       };
     }
   };

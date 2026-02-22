@@ -20,6 +20,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import Footer from "../../../layout/Footer";
 import FileUploadCP from "../../../component/_common/fileUploadCP";
 import ButtonCP from "../../../component/_common/buttonCP";
+import { api_profileCreate, api_reportAnalyze, buildProfileRequestFromCreateForm } from "../../../api/roadmap";
 
 const MyRoadmapCreatePage = () => {
   const [isAlertOpen, alertTitleText, alertButtonText, setAlertTitleText, setAlertButtonText, closeAlert, openAlert] = useAlertCP();
@@ -264,34 +265,46 @@ const MyRoadmapCreatePage = () => {
       isValid = false;
     }
 
+    if (!isAgree) {
+      alert("AI 로드맵 생성 동의가 필요합니다.");
+      return;
+    }
+
     if (isValid === false) return alert("입력한 내용을 다시 확인해 주세요.");
 
-    const apiData = {
-      user: {
-        name: name.trim(),
-      },
-      education: {
-        lastSchoolLevel: univLevel.trim || "", // 드롭다운: 최종학력
-        schoolType: univType.trim || "", // 드롭다운: 4년제, 전문대, 대학원 등
-        schoolName: univ.trim || "", // 검색 입력
-        major: department.trim || "", // 전공
-        status: univSituation.trim || "", // 드롭다운: 재학, 휴학, 수료, 졸업예정, 졸업
-      },
-      careerGoal: {
-        category: data_hopeJobGroup[hopeJobGroup], // 드롭다운: IT/데이터 등
-        subRoles: hopeJobDetail || [], // 체크박스 다중 선택
-      },
-      skills: {
-        languages: planguagesList, // 체크박스 다중 선택
-        certificates: qualificationsList,
-        languageExams: languageQualifications.filter((item) => item.language && item.examName && item.score), // 배열 필터링
-        awards: premiers.filter((item) => item.category && item.title && item.rank), // 배열 필터링
-      },
-      portfolio: selectedFiles.filter((file) => file?.url).map((file) => file.url), // ["https://...", "https://..."], // 업로드된 파일 배열
-    };
-    console.log(apiData);
+    const profileRequest = buildProfileRequestFromCreateForm({
+      name,
+      univ,
+      department,
+      univSituation,
+      hopeJobGroupLabel: data_hopeJobGroup[hopeJobGroup],
+      hopeJobDetail,
+      qualificationsList,
+      languageQualifications,
+      premiers,
+      planguagesList,
+    });
 
-    // TODO: 검증 통과 후 제출 로직 추가
+    const portfolioFile = selectedFiles?.[0]?.file;
+
+    const createProfileResult = await api_profileCreate({
+      profileRequest,
+      portfolioFile,
+    });
+
+    if (!createProfileResult?.success) {
+      alert(createProfileResult?.message || "프로필 저장에 실패했습니다.");
+      return;
+    }
+
+    const analyzeResult = await api_reportAnalyze();
+    if (!analyzeResult?.success || !analyzeResult?.reportId) {
+      alert(analyzeResult?.message || "로드맵 생성에 실패했습니다.");
+      return;
+    }
+
+    sessionStorage.setItem("roadmap_report_id", String(analyzeResult.reportId));
+    nav("/roadmap/result");
   }, [
     name,
     univLevel,
@@ -306,6 +319,8 @@ const MyRoadmapCreatePage = () => {
     languageQualifications,
     premiers,
     selectedFiles,
+    isAgree,
+    nav,
   ]);
 
   useEffect(() => {
@@ -649,7 +664,7 @@ const MyRoadmapCreatePage = () => {
             {/* 구분선 */}
             <div className="w-full h-px bg-gray-300"></div>
             {/* 버튼 DIV */}
-            <div className="flex justify-between items-center mb-64 flex-col sm:flex-row gap-4">
+            <div className="flex justify-between items-center mb-32 sm:mb-64 flex-col sm:flex-row gap-4">
               {/* 동의 */}
               <form>
                 <input

@@ -6,7 +6,7 @@ import { useInput } from "../../hook/useInput";
 import ButtonCP from "../../component/_common/buttonCP";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import LoginLayout from "../../layout/LoginLayout";
-import { api_signupCertification } from "../../api/signup";
+import { api_signupCertification, api_verifyCode } from "../../api/signup";
 import { useLoginInfo } from "../../context/LoginInfoContext";
 import useAlertCP from "../../hook/useAlertCP";
 import AlertCP from "../../component/_common/alertCP";
@@ -96,10 +96,24 @@ const ChangePasswordPage = () => {
       return;
     }
 
+    const verifyResult = await api_verifyCode({
+      phoneNumber: phone,
+      authCode: verificationCode,
+      type: "FIND_PW",
+    });
+
+    if (!verifyResult?.success) {
+      setVerificationCodeError(true);
+      setAlertTitleText(verifyResult?.message || "인증번호가 일치하지 않습니다.");
+      setAlertButtonText("확인");
+      setAlertUrl(".");
+      openAlert();
+      return;
+    }
+
     const data = {
-      name: name,
       email: email,
-      password: newPassword,
+      newPassword: newPassword,
       phoneNumber: phone,
       authCode: verificationCode,
     };
@@ -112,14 +126,14 @@ const ChangePasswordPage = () => {
         setAlertUrl("/login");
         openAlert();
       } else {
-        setAlertTitleText(result.message || "회원가입에 실패했습니다");
+        setAlertTitleText(result.message || "비밀번호 변경에 실패했습니다");
         setAlertButtonText("확인");
         setAlertUrl(".");
         openAlert();
       }
     } catch (err) {
       console.error(err);
-      setAlertTitleText("회원가입 중 오류가 발생했습니다");
+      setAlertTitleText("비밀번호 변경 중 오류가 발생했습니다");
       setAlertButtonText("확인");
       setAlertUrl(".");
       openAlert();
@@ -153,12 +167,17 @@ const ChangePasswordPage = () => {
     setPhoneError(!phoneValid);
     if (!phoneValid || cooldownLeft > 0) return;
 
-    const ok = await api_signupCertification(phone); // 비동기 응답 후 쿨 다운 시작
-    console.log(ok);
-    if (ok) {
+    const result = await api_signupCertification(phone, "FIND_PW");
+    if (result?.success) {
       setVerificationRequested(true);
-      setCooldownLeft(180);
+      setCooldownLeft(result?.expiryTime ?? 180);
+      return;
     }
+
+    setAlertTitleText(result?.message || "인증번호 발송에 실패했습니다");
+    setAlertButtonText("확인");
+    setAlertUrl(".");
+    openAlert();
   }, [cooldownLeft, phone, validatePhone]);
 
   return (
@@ -203,7 +222,7 @@ const ChangePasswordPage = () => {
             </ButtonCP>
           </div>
         </div>
-        {isCooldownActive && (
+        {verificationRequested && (
           <div className="w-full">
             {/* 인증번호 */}
             <InputCP

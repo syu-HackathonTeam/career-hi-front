@@ -9,6 +9,7 @@ import { useInput } from "../../hook/useInput";
 import ButtonCP from "../../component/_common/buttonCP";
 import { useCallback, useState } from "react";
 import LoginLayout from "../../layout/LoginLayout";
+import { useLoginInfo } from "../../context/LoginInfoContext";
 
 const LoginPage = () => {
   const nav = useNavigate();
@@ -16,11 +17,12 @@ const LoginPage = () => {
   const [password, onChangePassword, setPassword] = useInput("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const { login } = useLoginInfo();
 
   const validateEmail = (email) => email.includes("@") && email.includes(".");
   const validatePassword = (password) => /^[A-Za-z0-9\-!@#]{6,16}$/.test(password);
 
-  const onClickLogin = useCallback(() => {
+  const onClickLogin = useCallback(async () => {
     const emailValid = validateEmail(email);
     const passwordValid = validatePassword(password);
 
@@ -45,13 +47,18 @@ const LoginPage = () => {
       return;
     }
 
-    // TODO: 로그인 API 요청
-
     setPasswordError(false);
     setEmailError(false);
 
-    alert("로그인 성공!");
-  }, [email, password, setPassword, setEmailError, setPasswordError]);
+    const result = await login(email, password);
+    if (result?.success) {
+      nav("/");
+      return;
+    }
+
+    setPassword("");
+    alert(result?.message || "로그인에 실패했습니다.");
+  }, [email, password, setPassword, setEmailError, setPasswordError, login, nav]);
   return (
     <LoginLayout>
       {/* 콘텐츠 */}

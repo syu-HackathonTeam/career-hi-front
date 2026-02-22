@@ -4,7 +4,7 @@ import axios from "axios";
  * 공용 axios 인스턴스 및 JWT 자동 포함 기능
  *
  * 사용법:
- * 1. JWT 토큰은 localStorage에 "jwt_token" 키로 저장되어 있어야 합니다.
+ * 1. JWT 토큰은 localStorage에 "access_token" / "refresh_token" 키로 저장되어 있어야 합니다.
  * 2. api 인스턴스를 import하여 axios 대신 사용하세요.
  *    예시:
  *      import { api } from "./api";
@@ -19,12 +19,22 @@ import axios from "axios";
 
 // JWT 토큰을 localStorage에서 가져오는 함수
 function getJwtToken() {
-  return localStorage.getItem("jwt_token");
+  return localStorage.getItem("access_token");
 }
 
 // 리프레시 토큰을 localStorage에서 가져오는 함수
 function getRefreshToken() {
   return localStorage.getItem("refresh_token");
+}
+
+function setTokenInfo(tokenInfo) {
+  localStorage.setItem("access_token", tokenInfo?.accessToken ?? "");
+  localStorage.setItem("refresh_token", tokenInfo?.refreshToken ?? "");
+}
+
+function clearTokenInfo() {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
 }
 
 // 공용 axios 인스턴스 생성
@@ -41,14 +51,70 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = getJwtToken();
-    const refreshToken = getRefreshToken();
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
-    }
-    if (refreshToken) {
-      config.headers["x-refresh-token"] = refreshToken;
     }
     return config;
   },
   (error) => Promise.reject(error),
 );
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error?.config;
+    const status = error?.response?.status;
+    const errorCode = error?.response?.data?.errorCode;
+
+    if (!originalRequest || originalRequest._retry) {
+      return Promise.reject(error);
+    }
+
+    const shouldReissue = status === 401 && errorCode === "TOKEN_EXPIRED";
+    if (!shouldReissue) {
+      return Promise.reject(error);
+    }
+
+    const accessToken = getJwtToken();
+    const refreshToken = getRefreshToken();
+
+    if (!accessToken || !refreshToken) {
+      clearTokenInfo();
+      return Promise.reject(error);
+    }
+
+    originalRequest._retry = true;
+
+    try {
+      const reissueResponse = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/v1/auth/reissue`,
+        {
+          accessToken,
+          refreshToken,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        },
+      );
+
+      const tokenInfo = reissueResponse?.data?.data?.tokenInfo;
+      if (!tokenInfo?.accessToken || !tokenInfo?.refreshToken) {
+        clearTokenInfo();
+        return Promise.reject(error);
+      }
+
+      setTokenInfo(tokenInfo);
+      originalRequest.headers["Authorization"] = `Bearer ${tokenInfo.accessToken}`;
+      return api(originalRequest);
+    } catch (reissueError) {
+      clearTokenInfo();
+      return Promise.reject(reissueError);
+    }
+  },
+);
+
+export { setTokenInfo, clearTokenInfo };

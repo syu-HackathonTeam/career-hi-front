@@ -175,43 +175,37 @@ a:active {
   font-family: var(--font-pretendard) !important;
   font-size: 1rem !important;
   font-style: normal !important;
-  font-weight: 600 !important;
-  line-height: normal !important;
+  font-weight: 300 !important;
 }
 .B2_bold {
   font-family: var(--font-pretendard) !important;
   font-size: 1rem !important;
   font-style: normal !important;
   font-weight: 600 !important;
-  line-height: normal !important;
 }
 .B3 {
   font-family: var(--font-pretendard) !important;
-  font-size: 0.9375rem !important;
+  font-size: 0.875rem !important;
   font-style: normal !important;
   font-weight: 300 !important;
-  line-height: normal !important;
 }
 .B3_bold {
   font-family: var(--font-pretendard) !important;
-  font-size: 0.9375rem !important;
+  font-size: 0.875rem !important;
   font-style: normal !important;
   font-weight: 600;
-  line-height: normal !important;
 }
 .B4 {
   font-family: var(--font-pretendard) !important;
-  font-size: 0.8125rem !important;
+  font-size: 0.75rem !important;
   font-style: normal !important;
   font-weight: 300;
-  line-height: normal !important;
 }
 .B4_bold {
   font-family: var(--font-pretendard) !important;
-  font-size: 0.8125rem !important;
+  font-size: 0.75rem !important;
   font-style: normal !important;
   font-weight: 700 !important;
-  line-height: normal !important;
 }
 
 .H1 {
@@ -219,7 +213,6 @@ a:active {
   font-size: 2rem !important;
   font-style: normal !important;
   font-weight: 700 !important;
-  line-height: 2.8125rem !important; /* 140.625% */
 }
 
 .H2 {
@@ -227,21 +220,18 @@ a:active {
   font-size: 1.5rem !important;
   font-style: normal !important;
   font-weight: 500 !important;
-  line-height: 2.1875rem !important; /* 145.833% */
 }
 .H2_bold {
   font-family: var(--font-pretendard) !important;
   font-size: 1.5rem !important;
   font-style: normal !important;
   font-weight: 700 !important;
-  line-height: 2.1875rem !important; /* 145.833% */
 }
 .H3_bold {
   font-family: var(--font-pretendard) !important;
   font-size: 1.1875rem !important;
   font-style: normal !important;
   font-weight: 700 !important;
-  line-height: normal !important;
 }
 
 .Text_M1 {

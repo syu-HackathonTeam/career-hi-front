@@ -1,12 +1,11 @@
 import { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { api_uploadFile, api_deleteFile } from "../../../api/file";
 
 /**
  * 파일 업로드 공통 컴포넌트
  * @param {Object} props
- * @param {function} props.onFileSelect - 파일 선택 시 호출되는 콜백 (files: { name: string, url: string }[])
+ * @param {function} props.onFileSelect - 파일 선택 시 호출되는 콜백 (files: { name: string, file: File }[])
  * @param {string} [props.accept] - 허용 파일 타입 (예: "image/*", ".pdf,.doc")
  * @param {boolean} [props.multiple=false] - 다중 파일 선택 허용
  * @param {string} [props.placeholder="파일 선택"] - 버튼 텍스트
@@ -89,7 +88,7 @@ const FileUploadCP = ({
     return null;
   };
 
-  const handleFileChange = async (event) => {
+  const handleFileChange = (event) => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const fileArray = Array.from(files);
@@ -103,57 +102,26 @@ const FileUploadCP = ({
 
       setErrorMessage("");
 
-      try {
-        const uploadResults = await Promise.all(
-          fileArray.map(async (file) => {
-            const data = await api_uploadFile(file);
-            const url = data?.url || data?.fileUrl || data?.location || "";
-            return {
-              name: file.name,
-              url,
-            };
-          }),
-        );
+      const selected = fileArray.map((file) => ({
+        name: file.name,
+        file,
+      }));
 
-        const newSelectedFiles = [...selectedFiles, ...uploadResults];
-        setSelectedFiles(newSelectedFiles);
-
-        if (onFileSelect) {
-          onFileSelect(newSelectedFiles);
-        }
-      } catch (uploadError) {
-        const message = "파일 업로드에 실패했습니다.";
-        setErrorMessage(message);
-        if (onError) onError(message);
-      }
-    }
-  };
-
-  const handleRemoveFile = async (index) => {
-    const targetFile = selectedFiles[index];
-    if (!targetFile?.url) return;
-
-    try {
-      const result = await api_deleteFile(targetFile.url);
-      const isSuccess = result?.success ?? true;
-
-      if (!isSuccess) {
-        const message = "파일 삭제에 실패했습니다.";
-        setErrorMessage(message);
-        if (onError) onError(message);
-        return;
-      }
-
-      const newSelectedFiles = selectedFiles.filter((_, i) => i !== index);
+      const newSelectedFiles = [...selectedFiles, ...selected];
       setSelectedFiles(newSelectedFiles);
 
       if (onFileSelect) {
         onFileSelect(newSelectedFiles);
       }
-    } catch (deleteError) {
-      const message = "파일 삭제에 실패했습니다.";
-      setErrorMessage(message);
-      if (onError) onError(message);
+    }
+  };
+
+  const handleRemoveFile = (index) => {
+    const newSelectedFiles = selectedFiles.filter((_, i) => i !== index);
+    setSelectedFiles(newSelectedFiles);
+
+    if (onFileSelect) {
+      onFileSelect(newSelectedFiles);
     }
   };
 

@@ -8,7 +8,7 @@ const MainLayout = ({ children, mobile_block = false, page = "main" }) => {
   if (!isPc) {
     return (
       <main className="w-full h-screen relative">
-        <div className={`w-full ${mobile_block ? "h-9/10" : "h-full"} px-8 relative`}>{children}</div>
+        <div className={`w-full ${mobile_block ? "h-9/10" : "h-full"} px-8 relative overflow-y-auto`}>{children}</div>
         {mobile_block && <HeaderMobile page={page} />}
       </main>
     );

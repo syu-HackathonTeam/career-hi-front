@@ -1,60 +1,30 @@
-import { api } from "./index.js";
-
 /**
  *
  * @returns {object} {success: boolean, userInfo?: object, tokenInfo:object }
  */
 export const api_loginCheck = async () => {
-  // try {
-  //   const response = await api.get("/api/v1/auth/check");
-  //   const payload = response?.data;
-  //   const isLoggedIn = payload?.data?.isLoggedIn;
-  //   if (payload?.status === "SUCCESS" && isLoggedIn) {
-  //     return {
-  //       success: true,
-  //       userInfo: payload?.data?.user,
-  //     };
-  //   }
+  const accessToken = localStorage.getItem("access_token");
+  const refreshToken = localStorage.getItem("refresh_token");
 
+  // if (!accessToken || !refreshToken) {
   //   return {
   //     success: false,
-  //     message: payload?.message || "로그인 상태가 아닙니다.",
-  //   };
-  // } catch (err) {
-  //   if (err?.response?.status === 401) {
-  //     return {
-  //       success: false,
-  //       message: err?.response?.data?.message || "로그인이 필요합니다.",
-  //     };
-  //   }
-  //   console.error(err);
-  //   return {
-  //     success: false,
-  //     message: "로그인 상태 확인에 실패했습니다.",
+  //     message: "로그인이 필요합니다.",
   //   };
   // }
 
-  // FIXME: 임시 반환값 (로그인 유지)
   return {
     success: true,
     userInfo: {
       userId: 1022,
-      userName: "OOO",
-      email: "test@naver.com",
+      userName: "신가연",
+      email: "dummy@careerhi.com",
     },
     tokenInfo: {
-      grantType: "Bearer",
-      accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.access_token_area",
-      refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh_token_area",
-      accessTokenExpiresIn: 3600,
-      refreshTokenExpiresIn: 1209600,
+      accessToken,
+      refreshToken,
     },
   };
-
-  // FIXME: 임시 반환값 (로그인 안 된 상태)
-  // return {
-  //   success: false,
-  // };
 };
 
 /**
@@ -64,47 +34,58 @@ export const api_loginCheck = async () => {
  * @returns { success: boolean, userInfo?: object, tokenInfo:object } 로그인 여부 및 사용자 정보
  */
 export const api_login = async ({ email, password }) => {
-  try {
-    const response = await api.post("/api/v1/auth/login", {
-      email,
-      password,
-    });
-    const payload = response?.data;
-    if (payload?.status === "SUCCESS") {
-      return {
-        success: true,
-        userInfo: payload?.data?.user,
-        tokenInfo: payload?.data?.tokenInfo,
-        message: payload?.message,
-      };
-    }
+  // NOTE: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
+  // try {
+  //   const response = await api.post("/api/v1/auth/login", {
+  //     email,
+  //     password,
+  //   });
+  //   const payload = response?.data;
+  //   if (payload?.status === "SUCCESS") {
+  //     return {
+  //       success: true,
+  //       userInfo: payload?.data?.user,
+  //       tokenInfo: payload?.data?.tokenInfo,
+  //       message: payload?.message,
+  //     };
+  //   }
+  //
+  //   return {
+  //     success: false,
+  //     message: payload?.message || "로그인에 실패했습니다.",
+  //   };
+  // } catch (err) {
+  //   const errorCode = err?.response?.data?.errorCode;
+  //   const message = errorCode === "LOGIN_FAILED" ? "아이디 또는 비밀번호를 확인해주세요." : err?.response?.data?.message || "로그인에 실패했습니다.";
+  //   return {
+  //     success: false,
+  //     errorCode,
+  //     message,
+  //   };
+  // }
 
+  if (!email || !password) {
     return {
       success: false,
-      message: payload?.message || "로그인에 실패했습니다.",
-    };
-  } catch (err) {
-    const message = err?.response?.data?.message || "로그인에 실패했습니다.";
-    return {
-      success: false,
-      message,
+      errorCode: "LOGIN_FAILED",
+      message: "아이디 또는 비밀번호를 확인해주세요.",
     };
   }
 
-  // TODO: 구현 필요 (여러 에러처리 포함)
-  // return {
-  //   success: true,
-  //   userInfo: {
-  //     userId: 1022,
-  //     userName: "OOO",
-  //     email: "",
-  //   },
-  //   tokenInfo: {
-  //     grantType: "Bearer",
-  //     accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.access_token_area",
-  //     refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh_token_area",
-  //     accessTokenExpiresIn: 3600,
-  //     refreshTokenExpiresIn: 1209600,
-  //   },
-  // };
+  return {
+    success: true,
+    message: "로그인에 성공하였습니다. (더미)",
+    userInfo: {
+      userId: 1022,
+      userName: "신가연",
+      email,
+    },
+    tokenInfo: {
+      grantType: "Bearer",
+      accessToken: "dummy_access_token",
+      refreshToken: "dummy_refresh_token",
+      accessTokenExpiresIn: 3600,
+      refreshTokenExpiresIn: 1209600,
+    },
+  };
 };

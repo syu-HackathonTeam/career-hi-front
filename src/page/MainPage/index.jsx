@@ -1,4 +1,4 @@
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import AlertCP from "../../component/_common/alertCP";
 import useAlertCP from "../../hook/useAlertCP";
 import { useNavigate } from "react-router-dom";
