@@ -1,10 +1,11 @@
+import { api, getTokenInfo } from "./index";
+
 /**
  *
  * @returns {object} {success: boolean, userInfo?: object, tokenInfo:object }
  */
 export const api_loginCheck = async () => {
-  const accessToken = localStorage.getItem("access_token");
-  const refreshToken = localStorage.getItem("refresh_token");
+  const { accessToken, refreshToken } = getTokenInfo();
 
   // if (!accessToken || !refreshToken) {
   //   return {
@@ -88,4 +89,24 @@ export const api_login = async ({ email, password }) => {
       refreshTokenExpiresIn: 1209600,
     },
   };
+};
+
+export const api_logout = async () => {
+  // NOTE: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
+};
+
+export const api_deleteUser = async () => {
+  // NOTE: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
+  try {
+    const response = await api.delete("/api/v1/users/me");
+    const payload = response?.data;
+    if (payload?.status === "SUCCESS") {
+      return true;
+    }
+
+    return false;
+  } catch (err) {
+    console.error("회원 탈퇴 실패:", err);
+    return false;
+  }
 };

@@ -3,10 +3,13 @@ import { useMedia } from "../../hook/useMedia";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder, faHouse, faPaste } from "@fortawesome/free-regular-svg-icons";
 import Footer from "../Footer";
+import { useLoginInfo } from "../../context/LoginInfoContext";
 
 const MainContentLayout = ({ children, page = "main", fixed = false, scroll = false }) => {
   const nav = useNavigate();
   const { isPc } = useMedia();
+
+  const { userDelete } = useLoginInfo();
 
   if (!isPc) return children;
 
@@ -15,6 +18,30 @@ const MainContentLayout = ({ children, page = "main", fixed = false, scroll = fa
       className={`z-40 h-[calc(100vh-5.125rem)] min-h-[calc(100vh-5.125rem)] w-full bg-gray-100 flex items-stretch select-none overflow-hidden relative ${
         scroll ? "overflow-y-auto" : ""
       }`}>
+      <div className="fixed bottom-8 left-8 gap-4 z-999">
+        <p
+          onClick={() => {
+            console.log("클릭");
+          }}
+          className="B4 cursor-pointer ">
+          로그아웃
+        </p>
+        <p
+          onClick={async () => {
+            if (window.confirm("정말 회원 탈퇴를 진행하시겠습니까?\n탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.")) {
+              await userDelete()
+                .then(() => {
+                  alert("회원 탈퇴가 완료되었습니다.");
+                })
+                .catch(() => {
+                  alert("회원 탈퇴에 실패했습니다.\n나중에 다시 시도해주세요.");
+                });
+            }
+          }}
+          className="B4 cursor-pointer text-point-sub-bold mt-4">
+          회원 탈퇴
+        </p>
+      </div>
       {/* 왼쪽 영역 (남는 공간의 절반) */}
       <aside className={`z-45 flex-1 box-border px-[2vw] pt-14 h-[calc(100vh-5.125rem)] ${fixed ? "fixed top-20.5 w-[calc(50vw/2)]" : "relative"}`}>
         <div className="flex flex-col gap-1.5">

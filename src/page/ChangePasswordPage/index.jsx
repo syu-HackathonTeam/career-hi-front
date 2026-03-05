@@ -178,7 +178,7 @@ const ChangePasswordPage = () => {
     setAlertButtonText("확인");
     setAlertUrl(".");
     openAlert();
-  }, [cooldownLeft, phone, validatePhone]);
+  }, [cooldownLeft, openAlert, phone, setAlertButtonText, setAlertTitleText, validatePhone]);
 
   return (
     <LoginLayout>

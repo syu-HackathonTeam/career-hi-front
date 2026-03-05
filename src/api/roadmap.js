@@ -31,8 +31,20 @@ const mapSubRole = (roleKr) => {
   return map[roleKr] || toUpperSafe(roleKr)?.replaceAll(" ", "_");
 };
 
-export const api_profileCreate = async ({ profileRequest, portfolioFile }) => {
-  // NOTE: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
+const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+const pickChangedFields = (prev = {}, next = {}) => {
+  const changed = {};
+  Object.keys(next || {}).forEach((key) => {
+    if (!isEqual(prev?.[key], next?.[key])) {
+      changed[key] = next[key];
+    }
+  });
+  return changed;
+};
+
+export const api_profileCreate = async ({ profileRequest }) => {
+  // FIXME: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
   // try {
   //   const formData = new FormData();
   //   formData.append("request", new Blob([JSON.stringify(profileRequest)], { type: "application/json" }));
@@ -78,12 +90,12 @@ export const api_profileCreate = async ({ profileRequest, portfolioFile }) => {
   return {
     success: true,
     updatedAt: new Date().toISOString(),
-    message: portfolioFile ? "프로필 정보가 등록되었습니다. (더미/파일 포함)" : "프로필 정보가 등록되었습니다. (더미)",
+    message: "프로필 정보가 등록되었습니다. (더미)",
   };
 };
 
 export const api_profileGet = async () => {
-  // NOTE: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
+  // FIXME: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
   // try {
   //   const response = await api.get(`/api/v1/users/me/profile`);
   //   if (response?.data?.status === "SUCCESS") {
@@ -107,35 +119,107 @@ export const api_profileGet = async () => {
   // }
 
   return {
-    success: true,
-    data: {
-      basicInfo: {
-        name: "신가연",
-        academicStatus: "ENROLLED",
-        academicStatusKr: "재학",
-        schoolName: "한국대학교",
-        major: "컴퓨터공학",
-      },
-      jobInfo: {
-        targetJob: "IT_DATA",
-        targetJobKr: "IT/데이터",
-        subRoles: ["BACKEND", "DATA_ANALYSIS"],
-      },
-      specInfo: {
-        certificates: ["정보처리기사", "SQLD"],
-        languageTests: [{ testName: "OPIc", score: "IM2", grade: null }],
-        awards: [{ contestName: "교내 해커톤", awardName: "금상" }],
-        codingLanguages: ["JAVA", "PYTHON"],
-      },
-      portfolio: {
-        url: "https://github.com/lovesome-gy",
-        fileName: "portfolio_dummy.pdf",
-      },
+    basicInfo: {
+      name: "신가연",
+      academicStatus: "재학",
+      schoolName: "한국대학교",
+      major: "컴퓨터공학",
+      educationLevel: "대학교 이상 졸업",
+      schoolType: "대학교 (4년제)",
+    },
+    jobInfo: {
+      targetJob: "IT_DATA",
+      targetJobKr: "IT/데이터",
+      subRoles: ["프론트엔드"],
+    },
+    specInfo: {
+      certificates: ["정보처리기사", "SQLD"],
+      languageTests: [
+        { testName: "OPIc", score: "IM2", grade: null },
+        { testName: "JLPT", score: null, grade: "N2" },
+      ],
+      awards: [
+        { contestName: "교내 해커톤", awardName: "금상" },
+        { contestName: "K-Software 공모전", awardName: "입선" },
+      ],
+      codingLanguages: ["JAVA", "PYTHON", "C++"],
+    },
+    portfolio: {
+      url: "https://github.com/lovesome-gy",
+      fileName: "portfolio_2026.pdf",
+      fileUrl: "https://s3.bucket/...",
     },
   };
 };
 
+// {
+//     "basicInfo": {
+//         "name": "이영규",
+//         "academicStatus": "ENROLLED",
+//         "schoolName": "삼육대학교",
+//         "major": "데이터클라우드공학과",
+//         "grade": "",
+//         "semester": ""
+//     },
+//     "jobInfo": {
+//         "targetJob": "IT_DATA",
+//         "subRoles": [
+//             "FRONTEND"
+//         ]
+//     },
+//     "specInfo": {
+//         "certificates": [
+//             "SQLD (SQL 개발자)",
+//             "마이크로소프트 Azure Fundamentals (AZ-900)",
+//             "마이크로소프트 Azure Data Fundamentals (DP-900)"
+//         ],
+//         "languageTests": [],
+//         "awards": [
+//             {
+//                 "contestName": "SW 경진대회",
+//                 "awardName": "최우수상"
+//             }
+//         ],
+//         "codingLanguages": [
+//             "JAVASCRIPT",
+//             "REACT"
+//         ]
+//     },
+//     "portfolioUrl": ""
+// }
+
+/**
+ * 폼 입력값을 백엔드 요구 JSON 포맷으로 변환
+ * @param {object} params - 폼 입력값
+ * @returns {object} 백엔드 요구 포맷
+ *
+ * 매핑 예시:
+ * {
+ *   basicInfo: {
+ *     name: name, // 이름
+ *     academicStatus: mapAcademicStatus(univSituation), // 학적 상태(코드)
+ *     schoolName: univ, // 학교명
+ *     major: department, // 전공
+ *     grade: grade, // 학년(코드)
+ *     semester: semester, // 학기(코드)
+ *   },
+ *   jobInfo: {
+ *     targetJob: mapTargetJob(hopeJobGroupLabel), // 희망 직군(코드)
+ *     subRoles: hopeJobDetail, // 세부 직군(코드 배열)
+ *   },
+ *   specInfo: {
+ *     certificates: qualificationsList, // 자격증 배열
+ *     languageTests: languageQualifications, // 어학시험 배열
+ *     awards: premiers, // 수상내역 배열
+ *     codingLanguages: planguagesList, // 사용언어 배열
+ *   },
+ *   portfolioUrl: portfolioUrl // 포트폴리오 URL
+ * }
+ */
 export const buildProfileRequestFromCreateForm = ({
+  //FIXME: 최종학럭, 대학 타입 구분 없음
+  univLevel,
+  univType,
   name,
   univ,
   department,
@@ -146,42 +230,143 @@ export const buildProfileRequestFromCreateForm = ({
   languageQualifications,
   premiers,
   planguagesList,
+  portfolioFileUrl,
 }) => ({
   basicInfo: {
-    name: name?.trim() || "",
-    academicStatus: mapAcademicStatus(univSituation),
-    schoolName: univ?.trim() || "",
-    major: department?.trim() || "",
+    name: name?.trim() || "", // 이름
+    academicStatus: mapAcademicStatus(univSituation), // 학적 상태(코드)
+    schoolName: univ?.trim() || "", // 학교명
+    major: department?.trim() || "", // 전공
+    educationLevel: univLevel?.trim() || "", // 학력 수준 (코드)
+    schoolType: univType?.trim() || "", // 학교 유형 (코드)
   },
   jobInfo: {
-    targetJob: mapTargetJob(hopeJobGroupLabel),
-    subRoles: (hopeJobDetail || []).map(mapSubRole).filter(Boolean),
+    targetJob: mapTargetJob(hopeJobGroupLabel), // 희망 직군(코드)
+    subRoles: (hopeJobDetail || []).map(mapSubRole).filter(Boolean), // 세부 직군(코드 배열)
   },
   specInfo: {
-    certificates: qualificationsList || [],
+    certificates: qualificationsList || [], // 자격증 배열
     languageTests: (languageQualifications || [])
-      .filter((item) => item?.examName && item?.score)
+      .filter((item) => (item?.testName || item?.examName) && (item?.score || item?.grade))
       .map((item) => {
-        const raw = String(item.score);
-        const isNumericScore = /^\d+(\.\d+)?$/.test(raw);
+        const testName = item.testName || item.examName;
+        const rawScore = item.score;
+        const rawGrade = item.grade;
+        const fallbackRaw = String(rawScore ?? rawGrade ?? "");
+        const isNumericScore = /^\d+(\.\d+)?$/.test(fallbackRaw);
+
+        // 우선순위: grade/score 명시값 -> 숫자 판별 기반 fallback
+        const score = rawScore != null && rawScore !== "" ? String(rawScore) : isNumericScore ? fallbackRaw : null;
+        const grade = rawGrade != null && rawGrade !== "" ? String(rawGrade) : isNumericScore ? null : fallbackRaw;
+
         return {
-          testName: item.examName,
-          score: isNumericScore ? raw : null,
-          grade: isNumericScore ? null : raw,
+          testName, // 시험명
+          score, // 점수
+          grade, // 등급
         };
       }),
     awards: (premiers || [])
       .filter((item) => item?.title && item?.rank)
       .map((item) => ({
-        contestName: item.title,
-        awardName: item.rank,
+        contestName: item.title, // 대회명
+        awardName: item.rank, // 수상명
       })),
-    codingLanguages: (planguagesList || []).map((lang) => toUpperSafe(lang)),
+    codingLanguages: (planguagesList || []).map((lang) => toUpperSafe(lang)), // 사용언어(대문자)
   },
+  portfolioFileUrl: portfolioFileUrl || "", // 업로드된 포트폴리오 파일 URL
 });
 
+/**
+ * 기존 프로필과 현재 요청을 비교해 변경된 필드만 추출
+ */
+export const buildProfilePatchRequest = ({ previousProfile, currentProfileRequest }) => {
+  const patchRequest = {};
+
+  const changedBasicInfo = pickChangedFields(previousProfile?.basicInfo || {}, currentProfileRequest?.basicInfo || {});
+  if (Object.keys(changedBasicInfo).length > 0) {
+    patchRequest.basicInfo = changedBasicInfo;
+  }
+
+  const changedJobInfo = pickChangedFields(previousProfile?.jobInfo || {}, currentProfileRequest?.jobInfo || {});
+  if (Object.keys(changedJobInfo).length > 0) {
+    patchRequest.jobInfo = changedJobInfo;
+  }
+
+  const changedSpecInfo = pickChangedFields(previousProfile?.specInfo || {}, currentProfileRequest?.specInfo || {});
+  if (Object.keys(changedSpecInfo).length > 0) {
+    patchRequest.specInfo = changedSpecInfo;
+  }
+
+  const prevPortfolioFileUrl = previousProfile?.portfolioFileUrl ?? previousProfile?.portfolio?.FileUrl ?? previousProfile?.portfolio?.fileUrl ?? "";
+  const nextPortfolioFileUrl = currentProfileRequest?.portfolioFileUrl;
+  if (typeof nextPortfolioFileUrl !== "undefined" && !isEqual(prevPortfolioFileUrl, nextPortfolioFileUrl)) {
+    patchRequest.portfolioFileUrl = nextPortfolioFileUrl;
+  }
+
+  return patchRequest;
+};
+
+/**
+ * 프로필 부분 수정 (PATCH)
+ * URL: PATCH /api/v1/users/me/profile
+ * application/json
+ * - 변경된 필드만 포함한 JSON
+ */
+export const api_profilePatch = async ({ patchRequest }) => {
+  // FIXME: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
+  // try {
+  //   const formData = new FormData();
+  //   formData.append("request", new Blob([JSON.stringify(patchRequest)], { type: "application/json" }));
+  //   if (portfolioFile) {
+  //     formData.append("portfolioFile", portfolioFile);
+  //   }
+  //
+  //   const response = await api.patch(`/api/v1/users/me/profile`, formData, {
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //   });
+  //
+  //   if (response?.data?.status === "SUCCESS") {
+  //     return {
+  //       success: true,
+  //       updatedAt: response?.data?.data?.updatedAt,
+  //       message: response?.data?.message,
+  //     };
+  //   }
+  //
+  //   return {
+  //     success: false,
+  //     message: response?.data?.message || "프로필 수정에 실패했습니다.",
+  //     errorCode: response?.data?.errorCode,
+  //   };
+  // } catch (err) {
+  //   return {
+  //     success: false,
+  //     message: err?.response?.data?.message || "프로필 수정에 실패했습니다.",
+  //     errorCode: err?.response?.data?.errorCode,
+  //   };
+  // }
+
+  const hasPatchFields = patchRequest && Object.keys(patchRequest).length > 0;
+  if (!hasPatchFields) {
+    return {
+      success: true,
+      updatedAt: null,
+      message: "변경된 항목이 없습니다.",
+      noChanges: true,
+    };
+  }
+
+  return {
+    success: true,
+    updatedAt: new Date().toISOString(),
+    message: "프로필 정보가 수정되었습니다. (더미)",
+  };
+};
+
 export const api_reportAnalyze = async () => {
-  // NOTE: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
+  // FIXME: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
   // try {
   //   const response = await api.post(`/api/v1/reports/analyze`);
   //
@@ -214,7 +399,7 @@ export const api_reportAnalyze = async () => {
 };
 
 export const api_roadmapListGet = async () => {
-  // NOTE: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
+  // FIXME: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
   // try {
   //   const response = await api.get(`/api/v1/reports`);
   //
@@ -299,7 +484,7 @@ export const api_roadmapListGrowthGet = async () => {
 };
 
 export const api_roadmapDetailGet = async (reportId) => {
-  // NOTE: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
+  // FIXME: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
   // try {
   //   const response = await api.get(`/api/v1/reports/${reportId}`);
   //
@@ -432,7 +617,7 @@ export const api_roadmapDetailGet = async (reportId) => {
 };
 
 export const api_reportDelete = async (reportId) => {
-  // NOTE: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
+  // FIXME: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
   // try {
   //   const response = await api.delete(`/api/v1/reports/${reportId}`);
   //

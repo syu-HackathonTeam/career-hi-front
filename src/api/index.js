@@ -4,7 +4,7 @@ import axios from "axios";
  * 공용 axios 인스턴스 및 JWT 자동 포함 기능
  *
  * 사용법:
- * 1. JWT 토큰은 localStorage에 "access_token" / "refresh_token" 키로 저장되어 있어야 합니다.
+ * 1. JWT 토큰은 메모리 저장소에 유지됩니다.
  * 2. api 인스턴스를 import하여 axios 대신 사용하세요.
  *    예시:
  *      import { api } from "./api";
@@ -17,24 +17,36 @@ import axios from "axios";
  * 5. CORS 환경에서 자동으로 withCredentials가 적용되어 쿠키 기반 인증도 지원됩니다.
  */
 
-// JWT 토큰을 localStorage에서 가져오는 함수
+const tokenStore = {
+  accessToken: "",
+  refreshToken: "",
+};
+
+// JWT 토큰을 메모리에서 가져오는 함수
 function getJwtToken() {
-  return localStorage.getItem("access_token");
+  return tokenStore.accessToken;
 }
 
-// 리프레시 토큰을 localStorage에서 가져오는 함수
+// 리프레시 토큰을 메모리에서 가져오는 함수
 function getRefreshToken() {
-  return localStorage.getItem("refresh_token");
+  return tokenStore.refreshToken;
 }
 
 function setTokenInfo(tokenInfo) {
-  localStorage.setItem("access_token", tokenInfo?.accessToken ?? "");
-  localStorage.setItem("refresh_token", tokenInfo?.refreshToken ?? "");
+  tokenStore.accessToken = tokenInfo?.accessToken ?? "";
+  tokenStore.refreshToken = tokenInfo?.refreshToken ?? "";
 }
 
 function clearTokenInfo() {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
+  tokenStore.accessToken = "";
+  tokenStore.refreshToken = "";
+}
+
+function getTokenInfo() {
+  return {
+    accessToken: tokenStore.accessToken,
+    refreshToken: tokenStore.refreshToken,
+  };
 }
 
 // 공용 axios 인스턴스 생성
@@ -117,4 +129,4 @@ api.interceptors.response.use(
   },
 );
 
-export { setTokenInfo, clearTokenInfo };
+export { setTokenInfo, clearTokenInfo, getTokenInfo };

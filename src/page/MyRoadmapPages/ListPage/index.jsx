@@ -27,12 +27,12 @@ const MyRoadmapListPage = () => {
 
   // 스펙 클릭 핸들러
   const onClickGotoReports = (reportId) => {
-    sessionStorage.setItem("roadmap_report_id", String(reportId));
+    setRoadmapReportId(String(reportId));
     nav("/roadmap/result");
   };
 
   // 로그인 체크 및 데이터 로드
-  const { loginInfo, loginCheck } = useLoginInfo();
+  const { loginInfo, loginCheck, setRoadmapReportId } = useLoginInfo();
   useEffect(() => {
     const fetchData = async () => {
       const result = await loginCheck();

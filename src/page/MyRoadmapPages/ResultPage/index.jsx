@@ -57,7 +57,7 @@ const MyRoadmapResultPage = () => {
 
   const [reportData, setReportData] = useState(null);
 
-  const { loginCheck } = useLoginInfo();
+  const { loginCheck, roadmapReportId } = useLoginInfo();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,7 +69,7 @@ const MyRoadmapResultPage = () => {
         openAlert();
         setLoading(false);
       } else {
-        const reportId = sessionStorage.getItem("roadmap_report_id");
+        const reportId = roadmapReportId;
         if (!reportId) {
           setAlertTitleText("올바르지 않은 접근입니다.");
           setAlertButtonText("로드맵 보관함으로 이동");
@@ -96,7 +96,7 @@ const MyRoadmapResultPage = () => {
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loginCheck, roadmapReportId, openAlert, setAlertButtonText, setAlertTitleText]);
 
   return (
     <div className="relative">

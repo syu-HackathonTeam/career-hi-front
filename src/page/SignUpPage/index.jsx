@@ -176,7 +176,7 @@ const SignUpPage = () => {
     setAlertTitleText(result?.message || "인증번호 발송에 실패했습니다");
     setAlertButtonText("확인");
     openAlert();
-  }, [cooldownLeft, phone, validatePhone]);
+  }, [cooldownLeft, openAlert, phone, setAlertButtonText, setAlertTitleText, validatePhone]);
 
   return (
     <LoginLayout>

@@ -207,57 +207,43 @@ export const data_p_languages = [
   "Mongoose",
 ];
 
-export const data_languages = ["ENGLISH", "JAPANESE", "CHINESE", "ETC"];
-
 export const data_languageQualifications = {
-  // 영어
-  ENGLISH: {
-    TOEIC: [],
-    "TOEIC Speaking": ["AH", "AM", "AL", "IH", "IM3", "IM2", "IM1", "IL", "NH", "NM", "NL"],
-    OPIc: ["AL", "IH", "IM3", "IM2", "IM1", "IL", "NH", "NM", "NL"],
-    TEPS: [],
-    "G-TELP": ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"],
-    TOEFL: [],
-    IELTS: [],
-    FLEX: [],
-    TESL: [],
-    PELT: ["1급", "2급", "3급", "4급", "5급", "6급", "7급", "8급", "9급"],
-    ESPT: ["1급", "2급", "3급", "Normal"],
-    ITT: ["1급", "2급", "3급"],
-    SPA: ["Level 8", "Level 7", "Level 6", "Level 5", "Level 4", "Level 3", "Level 2", "Level 1"],
-  },
+  TOEIC: "score",
+  "TOEIC Speaking": "grade",
+  OPIc: "grade",
+  TEPS: "score",
+  "G-TELP": "grade",
+  TOEFL: "score",
+  IELTS: "score",
+  FLEX: "score",
+  TESL: "score",
+  PELT: "grade",
+  ESPT: "grade",
+  ITT: "grade",
+  SPA: "grade",
 
-  // 일본어
-  JAPANESE: {
-    JPT: [],
-    JLPT: ["N1", "N2", "N3", "N4", "N5"],
-    SJPT: ["Level 10", "Level 9", "Level 8", "Level 7", "Level 6", "Level 5", "Level 4", "Level 3", "Level 2", "Level 1"],
-    BJT: ["J1+", "J1", "J2", "J3", "J4", "J5"],
-    "Flex 일본어": [],
-    "EJU (일본유학시험)": [],
-    "Nikken (일본어검정)": ["1급", "준1급", "2급", "준2급", "3급", "4급", "5급"],
-  },
+  JPT: "score",
+  JLPT: "grade",
+  SJPT: "grade",
+  BJT: "grade",
+  "Flex 일본어": "score",
+  "EJU (일본유학시험)": "score",
+  "Nikken (일본어검정)": "grade",
 
-  // 중국어
-  CHINESE: {
-    HSK: ["6급", "5급", "4급", "3급", "2급", "1급"],
-    TSC: ["Level 10", "Level 9", "Level 8", "Level 7", "Level 6", "Level 5", "Level 4", "Level 3", "Level 2", "Level 1"],
-    HSKK: ["고급", "중급", "초급"],
-    BCT: ["BCT(B)", "BCT(A)"],
-    CPT: [],
-    "FLEX 중국어": [],
-  },
+  HSK: "grade",
+  TSC: "grade",
+  HSKK: "grade",
+  BCT: "grade",
+  CPT: "score",
+  "FLEX 중국어": "score",
 
-  // 기타
-  ETC: {
-    "FLEX (독일어/프랑스어/스페인어 등)": [],
-    "SNULT (제2외국어)": [],
-    "DELE (스페인어)": ["C2", "C1", "B2", "B1", "A2", "A1"],
-    "DELF/DALF (프랑스어)": ["C2 (DALF)", "C1 (DALF)", "B2 (DELF)", "B1 (DELF)", "A2 (DELF)", "A1 (DELF)"],
-    "Goethe-Zertifikat (독일어)": ["C2", "C1", "B2", "B1", "A2", "A1"],
-    "TestDaF (독일어)": ["TDN 5", "TDN 4", "TDN 3"],
-    "TORFL (러시아어)": ["4단계", "3단계", "2단계", "1단계", "기본단계", "기초단계"],
-    "CILS/CELI (이탈리아어)": ["C2", "C1", "B2", "B1", "A2", "A1"],
-    "OPIc (서어/불어/독어/러시아어/중국어 등)": ["AL", "IH", "IM3", "IM2", "IM1", "IL", "NH", "NM", "NL"],
-  },
+  "FLEX (독일어/프랑스어/스페인어 등)": "score",
+  "SNULT (제2외국어)": "score",
+  "DELE (스페인어)": "grade",
+  "DELF/DALF (프랑스어)": "grade",
+  "Goethe-Zertifikat (독일어)": "grade",
+  "TestDaF (독일어)": "grade",
+  "TORFL (러시아어)": "grade",
+  "CILS/CELI (이탈리아어)": "grade",
+  "OPIc (서어/불어/독어/러시아어/중국어 등)": "grade",
 };
