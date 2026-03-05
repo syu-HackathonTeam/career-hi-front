@@ -19,7 +19,7 @@ export const api_loginCheck = async () => {
     userInfo: {
       userId: 1022,
       userName: "신가연",
-      email: "dummy@careerhi.com",
+      email: "dummy@i.com",
     },
     tokenInfo: {
       accessToken,
