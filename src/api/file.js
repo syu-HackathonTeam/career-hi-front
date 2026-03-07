@@ -52,12 +52,38 @@ export const api_uploadFile = async (file) => {
 };
 
 // 파일 삭제
-export const api_deleteFile = async () => {
-  // const response = await api.delete("/files", {
-  //   data: { url: fileUrl },
-  // });
+export const api_deleteFile = async (fileUrl) => {
+  if (!fileUrl) {
+    return {
+      success: false,
+      message: "삭제할 파일 URL이 없습니다.",
+      errorCode: "INVALID_INPUT_VALUE",
+    };
+  }
 
-  // return response.data;
+  try {
+    const response = await api.delete(`/api/v1/files`, {
+      data: { fileUrl },
+    });
+    const payload = response?.data;
 
-  return { success: true };
+    if (payload?.status === "SUCCESS") {
+      return {
+        success: true,
+        message: payload?.message || "파일이 삭제되었습니다.",
+      };
+    }
+
+    return {
+      success: false,
+      message: payload?.message || "파일 삭제에 실패했습니다.",
+      errorCode: payload?.errorCode,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err?.response?.data?.message || "파일 삭제에 실패했습니다.",
+      errorCode: err?.response?.data?.errorCode,
+    };
+  }
 };
