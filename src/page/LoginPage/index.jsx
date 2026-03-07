@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MainLayout from "../../layout";
 import { faKakaoTalk } from "@fortawesome/free-brands-svg-icons";
 import logo_image from "../../assets/image/logo.png";
 import "./style.css";
@@ -66,12 +65,6 @@ const LoginPage = () => {
         <img src={logo_image} alt="LOGO" id="loginPage-logo" className=" w-1/3 max-w-25 p-1.5 border rounded-3xl border-gray-200" />
         <p className="H2_bold">로그인</p>
       </div>
-      <div className="w-full hidden md:black">
-        <ButtonCP bg="bg-[#FEE500]" color="text-[#392020]">
-          <FontAwesomeIcon icon={faKakaoTalk} className="mr-2" />
-          <span>카카오 로그인</span>
-        </ButtonCP>
-      </div>
       <div className="hidden md:black border-b border-gray-200 w-full max-w-105">{/* 밑줄 */}</div>
       <div className="w-full max-w-105 flex flex-col justify-center gap-2">
         <div className="w-full">
@@ -104,12 +97,6 @@ const LoginPage = () => {
         </p>
       </div>
       <div className="md:hidden black border-b border-gray-200 w-full max-w-105">{/* 밑줄 */}</div>
-      <div className="flexWidthCenter gap-2.5">
-        <p>간편 로그인</p>
-        <div className="bg-[#FEE500] w-13 h-13 rounded-full flexCenter text-2xl">
-          <FontAwesomeIcon icon={faKakaoTalk} className="" />
-        </div>
-      </div>
     </LoginLayout>
   );
 };

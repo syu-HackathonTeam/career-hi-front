@@ -9,7 +9,6 @@ import LoginLayout from "../../layout/LoginLayout";
 import { api_signupCertification, api_verifyCode } from "../../api/signup";
 import { useLoginInfo } from "../../context/LoginInfoContext";
 import useAlertCP from "../../hook/useAlertCP";
-import AlertCP from "../../component/_common/alertCP";
 
 const ChangePasswordPage = () => {
   const nav = useNavigate();
@@ -181,19 +180,15 @@ const ChangePasswordPage = () => {
   }, [cooldownLeft, openAlert, phone, setAlertButtonText, setAlertTitleText, validatePhone]);
 
   return (
-    <LoginLayout>
-      {/* AlertCP */}
-      {isAlertOpen && (
-        <AlertCP
-          titleText={alertTitleText}
-          buttonText={alertButtonText}
-          closeButton={closeAlert}
-          okButton={() => {
-            closeAlert();
-            nav(`${alertUrl}`);
-          }}
-        />
-      )}
+    <LoginLayout
+      isAlertOpen={isAlertOpen}
+      alertTitleText={alertTitleText}
+      alertButtonText={alertButtonText}
+      onAlertClose={closeAlert}
+      onAlertOk={() => {
+        closeAlert();
+        nav(`${alertUrl}`);
+      }}>
       {/* 콘텐츠 */}
       <div className="w-full flex flexHeightCenter gap-8">
         <img src={logo_image} alt="LOGO" id="loginPage-logo" className=" w-1/3 max-w-25 p-1.5 border rounded-3xl border-gray-200" />

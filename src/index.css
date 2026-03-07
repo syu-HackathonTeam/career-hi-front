@@ -90,9 +90,6 @@ main {
 * {
   scrollbar-width: thin; /* Firefox */
 }
-header {
-  z-index: 999;
-}
 
 ol,
 ul {

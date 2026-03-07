@@ -7,6 +7,11 @@ import { api, getTokenInfo } from "./index";
 export const api_loginCheck = async () => {
   const { accessToken, refreshToken } = getTokenInfo();
 
+  // return {
+  //   success: true,
+  //   message: "로그인 상태를 확인했습니다.",
+  // };
+
   if (!accessToken || !refreshToken) {
     return {
       success: false,

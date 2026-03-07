@@ -32,7 +32,6 @@ const MainPage = () => {
         <AlertCP
           titleText={alertTitleText}
           buttonText={alertButtonText}
-          closeButton={closeAlert}
           okButton={() => {
             closeAlert();
             nav("/login");

@@ -9,7 +9,6 @@ import LoginLayout from "../../layout/LoginLayout";
 import { api_signupCertification, api_verifyCode } from "../../api/signup";
 import { useLoginInfo } from "../../context/LoginInfoContext";
 import useAlertCP from "../../hook/useAlertCP";
-import AlertCP from "../../component/_common/alertCP";
 
 const SignUpPage = () => {
   const nav = useNavigate();
@@ -179,19 +178,15 @@ const SignUpPage = () => {
   }, [cooldownLeft, openAlert, phone, setAlertButtonText, setAlertTitleText, validatePhone]);
 
   return (
-    <LoginLayout>
-      {/* AlertCP */}
-      {isAlertOpen && (
-        <AlertCP
-          titleText={alertTitleText}
-          buttonText={alertButtonText}
-          closeButton={closeAlert}
-          okButton={() => {
-            closeAlert();
-            nav("/");
-          }}
-        />
-      )}
+    <LoginLayout
+      isAlertOpen={isAlertOpen}
+      alertTitleText={alertTitleText}
+      alertButtonText={alertButtonText}
+      onAlertClose={closeAlert}
+      onAlertOk={() => {
+        closeAlert();
+        nav("/");
+      }}>
       {/* 콘텐츠 */}
       <div className="w-full flex flexHeightCenter gap-8">
         <img src={logo_image} alt="LOGO" id="loginPage-logo" className=" w-1/3 max-w-25 p-1.5 border rounded-3xl border-gray-200" />
@@ -216,7 +211,7 @@ const SignUpPage = () => {
           </div>
           <div className={isCooldownActive ? "pointer-events-none" : ""} onClick={onSendVerificationCode}>
             <ButtonCP bg={isCooldownActive ? "bg-gray-300" : "bg-point-text"} color={isCooldownActive ? "text-point-text" : "text-white"} fontSize="text-sm">
-              {isCooldownActive ? getCooldownLabel() : "인증번호 발송"}
+              {isCooldownActive ? getCooldownLabel() : "인증 발송"}
             </ButtonCP>
           </div>
         </div>
