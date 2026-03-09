@@ -45,6 +45,8 @@ const loadTokenInfoFromStorage = () => {
   }
 };
 
+loadTokenInfoFromStorage();
+
 /**
  * 현재 메모리의 토큰 정보를 브라우저 저장소와 동기화한다.
  * 토큰이 비어 있으면 저장소 값을 제거한다.
@@ -116,8 +118,6 @@ const getTokenInfo = () => {
     refreshToken: tokenStore.refreshToken,
   };
 };
-
-loadTokenInfoFromStorage();
 
 // 공용 axios 인스턴스 생성
 export const api = axios.create({
