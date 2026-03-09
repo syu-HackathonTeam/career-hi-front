@@ -1,5 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faKakaoTalk } from "@fortawesome/free-brands-svg-icons";
 import logo_image from "../../assets/image/logo.png";
 import "./style.css";
 import InputCP from "../../component/_common/inputCP";

@@ -187,7 +187,7 @@ const ChangePasswordPage = () => {
       onAlertClose={closeAlert}
       onAlertOk={() => {
         closeAlert();
-        nav(`${alertUrl}`);
+        nav(`${alertUrl === "." ? "0" : alertUrl}`);
       }}>
       {/* 콘텐츠 */}
       <div className="w-full flex flexHeightCenter gap-8">
