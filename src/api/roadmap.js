@@ -46,15 +46,8 @@ export const api_profileCreate = async ({ profileRequest }) => {
   }
 
   try {
-    const formData = new FormData();
-    formData.append("request", new Blob([JSON.stringify(profileRequest)], { type: "application/json" }));
-    console.log(formData);
-
-    const response = await api.post(`/api/v1/users/me/profile`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    console.log(profileRequest);
+    const response = await api.post(`/api/v1/users/me/profile`, profileRequest);
 
     if (isSuccessStatus(response?.data?.status)) {
       return {
@@ -264,14 +257,7 @@ export const api_profilePatch = async ({ patchRequest }) => {
   }
 
   try {
-    const formData = new FormData();
-    formData.append("request", new Blob([JSON.stringify(patchRequest)], { type: "application/json" }));
-
-    const response = await api.patch(`/api/v1/users/me/profile`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await api.patch(`/api/v1/users/me/profile`, patchRequest);
 
     if (isSuccessStatus(response?.data?.status)) {
       return {
