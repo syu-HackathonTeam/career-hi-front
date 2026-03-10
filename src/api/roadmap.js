@@ -48,6 +48,7 @@ export const api_profileCreate = async ({ profileRequest }) => {
   try {
     const formData = new FormData();
     formData.append("request", new Blob([JSON.stringify(profileRequest)], { type: "application/json" }));
+    console.log(formData);
 
     const response = await api.post(`/api/v1/users/me/profile`, formData, {
       headers: {
