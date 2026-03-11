@@ -96,8 +96,15 @@ const MyRoadmapResultPage = () => {
       }
     };
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginCheck, roadmapReportId, openAlert, setAlertButtonText, setAlertTitleText]);
+
+  const getTargetJobLabel = (targetJob) => {
+    const map = {
+      IT_DATA: "IT/데이터",
+    };
+
+    return map[targetJob] || targetJob;
+  };
 
   return (
     <div>
@@ -132,7 +139,7 @@ const MyRoadmapResultPage = () => {
                 {/* 그래프 - 시작 */}
                 <div className="relative w-full my-24">
                   <p className="mx-auto leading-8 text-center w-fit H2_bold">
-                    {reportData.userName}님은 <span className="text-point-main">{reportData.targetJob}</span>직군에
+                    {reportData.userName}님은 <span className="text-point-main">{getTargetJobLabel(reportData.targetJob)}</span>직군에
                     <br />
                     필요한 역량을 {reportData.matchRate}% 갖추었네요!
                   </p>
@@ -237,10 +244,10 @@ const MyRoadmapResultPage = () => {
                 <div className="my-26">
                   <h2 className="H2_bold my-12">{reportData.skillGap.title}</h2>
                   {/* 스택 */}
-                  <div>
+                  <div className="flex flex-col gap-6">
                     {reportData.skillGap.items.map((item, idx) => (
                       <div className="flex gap-4 min-h-20 sm:min-h-24" key={idx}>
-                        <div className="basis-2/10 flexCenter flex-col gap-1 p-4 rounded-lg bg-[#EAFFE5] border border-[#38D255] text-[#38D255]">
+                        <div className="min-w-24.5 basis-2/10 flexCenter flex-col gap-1 p-4 rounded-lg bg-[#EAFFE5] border border-[#38D255] text-[#38D255]">
                           <p className="B2_bold">{item.badgeTitle}</p>
                           <p className="B2">{item.badgeValue}</p>
                         </div>
