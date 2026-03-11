@@ -249,7 +249,7 @@ const MyRoadmapResultPage = () => {
                       <div className="flex gap-4 min-h-20 sm:min-h-24" key={idx}>
                         <div className="min-w-24.5 basis-2/10 flexCenter flex-col gap-1 p-4 rounded-lg bg-[#EAFFE5] border border-[#38D255] text-[#38D255]">
                           <p className="B2_bold">{item.badgeTitle}</p>
-                          <p className="B2">{item.badgeValue}</p>
+                          {item.badgeValue !== "상" && <p className="B2">{item.badgeValue}</p>}
                         </div>
                         <div className="flex flex-col gap-4 p-4 rounded-lg bg-gray-100 basis-8/10">
                           <p className="B3_bold text-point-main">{item.contentTitle}</p>
