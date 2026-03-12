@@ -60,7 +60,9 @@ const FileUploadCP = ({
   const validateSelectedFiles = (files) => {
     if (!files || files.length === 0) return null;
 
-    if (typeof maxFiles === "number" && files.length + selectedFiles.length > maxFiles) {
+    const nextFiles = multiple ? [...selectedFiles, ...files.map((file) => ({ name: file.name, file }))] : files.map((file) => ({ name: file.name, file }));
+
+    if (typeof maxFiles === "number" && nextFiles.length > maxFiles) {
       return `최대 ${maxFiles}개까지 업로드할 수 있습니다.`;
     }
 
@@ -97,6 +99,7 @@ const FileUploadCP = ({
       if (error) {
         setErrorMessage(error);
         if (onError) onError(error);
+        event.target.value = "";
         return;
       }
 
@@ -107,12 +110,14 @@ const FileUploadCP = ({
         file,
       }));
 
-      const newSelectedFiles = [...selectedFiles, ...selected];
+      const newSelectedFiles = multiple ? [...selectedFiles, ...selected] : selected;
       setSelectedFiles(newSelectedFiles);
 
       if (onFileSelect) {
         onFileSelect(newSelectedFiles);
       }
+
+      event.target.value = "";
     }
   };
 

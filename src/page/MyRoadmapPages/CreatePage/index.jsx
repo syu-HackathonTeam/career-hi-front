@@ -107,18 +107,15 @@ const MyRoadmapCreatePage = () => {
       setUnivSituation("");
 
       setIsUnivInputDisabled(true);
-    } else if (univLevel === "고등학교 졸업" && univType === "대학교 진학X") {
-      setUniv("");
-      setDepartment("");
-      setUnivSituation("");
-
-      setIsUnivInputDisabled(true);
-    } else if (univType === "대학교 진학X") {
-      setUniv("");
-      setDepartment("");
-      setUnivSituation("");
-      setIsUnivInputDisabled(true);
     } else {
+      if (univLevel === "고등학교 졸업" && univType === "대학교 진학X") {
+        setUniv("");
+        setDepartment("");
+        setUnivSituation("");
+
+        setIsUnivInputDisabled(true);
+      }
+
       setIsUnivInputDisabled(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
