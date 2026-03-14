@@ -29,7 +29,7 @@ import {
   buildProfileRequestFromCreateForm,
   api_profileGet,
 } from "../../../api/roadmap";
-import { api_uploadFile } from "../../../api/file";
+import { api_deleteFile, api_uploadFile } from "../../../api/file";
 import { BarLoader } from "react-spinners";
 
 const MyRoadmapCreatePage = () => {
@@ -126,8 +126,22 @@ const MyRoadmapCreatePage = () => {
 
     const selectedFile = files?.[0]?.file;
     if (!selectedFile) {
+      if (portfolioFileUrl) {
+        const deleteResult = await api_deleteFile(portfolioFileUrl);
+        if (!deleteResult?.success) {
+          alert(deleteResult?.message || "기존 포트폴리오 파일 삭제에 실패했습니다.");
+        }
+      }
+
       setPortfolioFileUrl("");
       return;
+    }
+
+    if (portfolioFileUrl) {
+      const deleteResult = await api_deleteFile(portfolioFileUrl);
+      if (!deleteResult?.success) {
+        alert(deleteResult?.message || "기존 포트폴리오 파일 삭제에 실패했습니다.");
+      }
     }
 
     setIsPortfolioUploading(true);
