@@ -92,6 +92,7 @@ const MyRoadmapCreatePage = () => {
 
   // 선택된 파일
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [portfolioFileName, setPortfolioFileName] = useState("");
   const [portfolioFileUrl, setPortfolioFileUrl] = useState("");
   const [isPortfolioUploading, setIsPortfolioUploading] = useState(false);
 
@@ -121,24 +122,40 @@ const MyRoadmapCreatePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [univLevel]);
 
+  const getFileNameFromUrl = (url) => {
+    if (!url) return "";
+
+    try {
+      const pathname = new URL(url).pathname;
+      const fileName = pathname.split("/").pop() || "";
+      return decodeURIComponent(fileName);
+    } catch {
+      const fileName = String(url).split("/").pop() || "";
+      return decodeURIComponent((fileName.split("?")[0] || "").trim());
+    }
+  };
+
   const handleFileSelect = async (files) => {
     setSelectedFiles(files);
 
     const selectedFile = files?.[0]?.file;
     if (!selectedFile) {
-      if (portfolioFileUrl) {
-        const deleteResult = await api_deleteFile(portfolioFileUrl);
+      const deleteTargetFileName = portfolioFileName || getFileNameFromUrl(portfolioFileUrl);
+      if (deleteTargetFileName) {
+        const deleteResult = await api_deleteFile(deleteTargetFileName);
         if (!deleteResult?.success) {
           alert(deleteResult?.message || "기존 포트폴리오 파일 삭제에 실패했습니다.");
         }
       }
 
+      setPortfolioFileName("");
       setPortfolioFileUrl("");
       return;
     }
 
-    if (portfolioFileUrl) {
-      const deleteResult = await api_deleteFile(portfolioFileUrl);
+    const deleteTargetFileName = portfolioFileName || getFileNameFromUrl(portfolioFileUrl);
+    if (deleteTargetFileName) {
+      const deleteResult = await api_deleteFile(deleteTargetFileName);
       if (!deleteResult?.success) {
         alert(deleteResult?.message || "기존 포트폴리오 파일 삭제에 실패했습니다.");
       }
@@ -150,11 +167,13 @@ const MyRoadmapCreatePage = () => {
     setIsPortfolioUploading(false);
 
     if (!uploadResult?.success || !uploadResult?.fileUrl) {
+      setPortfolioFileName("");
       setPortfolioFileUrl("");
       alert(uploadResult?.message || "포트폴리오 파일 업로드에 실패했습니다.");
       return;
     }
 
+    setPortfolioFileName(uploadResult.fileName || "");
     setPortfolioFileUrl(uploadResult.fileUrl);
   };
 
@@ -495,6 +514,7 @@ const MyRoadmapCreatePage = () => {
       );
 
       setPortfolioFileUrl(result?.portfolio?.FileUrl || result?.portfolio?.fileUrl || "");
+      setPortfolioFileName(result?.portfolio?.FileName || result?.portfolio?.fileName || "");
 
       setIsAgree(true);
     }

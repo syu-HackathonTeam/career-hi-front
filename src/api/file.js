@@ -65,18 +65,18 @@ export const api_uploadFile = async (file) => {
 };
 
 // 파일 삭제
-export const api_deleteFile = async (fileUrl) => {
-  if (!fileUrl) {
+export const api_deleteFile = async (fileName) => {
+  if (!fileName) {
     return {
       success: false,
-      message: "삭제할 파일 URL이 없습니다.",
+      message: "삭제할 파일 이름이 없습니다.",
       errorCode: "INVALID_INPUT_VALUE",
     };
   }
 
   try {
     const response = await api.delete(`/api/v1/files`, {
-      data: { fileUrl },
+      params: { fileName },
     });
     const payload = response?.data;
 

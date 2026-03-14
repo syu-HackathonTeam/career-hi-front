@@ -8,7 +8,7 @@ import MainContentLayout from "../../../layout/MainLayout";
 import { useEffect, useState } from "react";
 import SpinnersCP from "../../../component/_common/spinnersCP/spinnersCP";
 import { useLoginInfo } from "../../../context/LoginInfoContext";
-import { api_roadmapDetailGet } from "../../../api/roadmap";
+import { api_reportDelete, api_roadmapDetailGet } from "../../../api/roadmap";
 
 import percentage_0 from "../../../assets/image/percentage/0.svg";
 import percentage_10 from "../../../assets/image/percentage/10.svg";
@@ -104,6 +104,27 @@ const MyRoadmapResultPage = () => {
     };
 
     return map[targetJob] || targetJob;
+  };
+
+  const onReportDeleteHandler = async () => {
+    if (!window.confirm("정말 삭제하시겠습니까?\n삭제된 로드맵은 복구할 수 없습니다.")) {
+      return;
+    }
+
+    const targetReportId = reportData?.reportId || roadmapReportId;
+    if (!targetReportId) {
+      alert("삭제할 리포트 정보를 찾을 수 없습니다.");
+      return;
+    }
+
+    const deleteResult = await api_reportDelete(targetReportId);
+    if (!deleteResult?.success) {
+      alert(deleteResult?.message || "로드맵 삭제에 실패했습니다.");
+      return;
+    }
+
+    alert(deleteResult?.message || "로드맵이 삭제되었습니다.");
+    nav("/roadmap/list");
   };
 
   return (
@@ -248,8 +269,16 @@ const MyRoadmapResultPage = () => {
                     {reportData.skillGap.items.map((item, idx) => (
                       <div className="flex gap-4 min-h-20 sm:min-h-24" key={idx}>
                         <div className="min-w-24.5 basis-2/10 flexCenter flex-col gap-1 p-4 rounded-lg bg-[#EAFFE5] border border-[#38D255] text-[#38D255]">
-                          <p className="B2_bold">{item.badgeTitle}</p>
-                          {item.badgeValue !== "상" && <p className="B2">{item.badgeValue}</p>}
+                          <p className="B3_bold text-center">{item.badgeTitle}</p>
+                          {item.badgeValue !== "상" && item.badgeValue !== "중" && item.badgeValue !== "하" ? (
+                            <p className="B3">{item.badgeValue}</p>
+                          ) : (
+                            <p className="B4">
+                              <span className={`${item.badgeValue === "하" ? "B3_bold" : "B4"}`}>하</span> /{" "}
+                              <span className={`${item.badgeValue === "중" ? "B3_bold" : "B4"}`}>중</span> /{" "}
+                              <span className={`${item.badgeValue === "상" ? "B3_bold" : "B4"}`}>상</span>
+                            </p>
+                          )}
                         </div>
                         <div className="flex flex-col gap-4 p-4 rounded-lg bg-gray-100 basis-8/10">
                           <p className="B3_bold text-point-main">{item.contentTitle}</p>
@@ -285,8 +314,11 @@ const MyRoadmapResultPage = () => {
                 </div>
                 {/* 포트폴리오 - 끝 */}
 
-                <div className="w-full flex justify-end mt-22 mb-32">
-                  <div className="w-1/2 sm:w-2/10">
+                <div className="w-full flex justify-end mt-22 mb-32 gap-6 items-end">
+                  <span onClick={onReportDeleteHandler} className="B4 p-2 text-point-sub-bold cursor-pointer">
+                    로드맵 삭제
+                  </span>
+                  <div className="w-1/2 sm:w-2/10" onClick={() => nav("/roadmap/list")}>
                     <ButtonCP bg="bg-point-text" color="text-white">
                       히스토리 열람
                     </ButtonCP>
