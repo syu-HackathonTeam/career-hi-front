@@ -163,6 +163,8 @@ export const buildProfileRequestFromCreateForm = ({
   languageQualifications,
   premiers,
   planguagesList,
+  portfolioUrl,
+  portfolioFileName,
   portfolioFileUrl,
 }) => ({
   basicInfo: {
@@ -206,7 +208,11 @@ export const buildProfileRequestFromCreateForm = ({
       })),
     codingLanguages: (planguagesList || []).map((lang) => toUpperSafe(lang)), // 사용언어(대문자)
   },
-  portfolioFileUrl: portfolioFileUrl || "", // 업로드된 포트폴리오 파일 URL
+  portfolio: {
+    Url: portfolioUrl || "",
+    FileName: portfolioFileName || "",
+    FileUrl: portfolioFileUrl || "",
+  },
 });
 
 /**
@@ -230,10 +236,15 @@ export const buildProfilePatchRequest = ({ previousProfile, currentProfileReques
     patchRequest.specInfo = changedSpecInfo;
   }
 
-  const prevPortfolioFileUrl = previousProfile?.portfolioFileUrl ?? previousProfile?.portfolio?.FileUrl ?? previousProfile?.portfolio?.fileUrl ?? "";
-  const nextPortfolioFileUrl = currentProfileRequest?.portfolioFileUrl;
-  if (typeof nextPortfolioFileUrl !== "undefined" && !isEqual(prevPortfolioFileUrl, nextPortfolioFileUrl)) {
-    patchRequest.portfolioFileUrl = nextPortfolioFileUrl;
+  const prevPortfolio = {
+    Url: previousProfile?.portfolio?.Url ?? previousProfile?.portfolio?.url ?? "",
+    FileName: previousProfile?.portfolio?.FileName ?? previousProfile?.portfolio?.fileName ?? "",
+    FileUrl: previousProfile?.portfolio?.FileUrl ?? previousProfile?.portfolio?.fileUrl ?? previousProfile?.portfolioFileUrl ?? "",
+  };
+  const nextPortfolio = currentProfileRequest?.portfolio;
+
+  if (typeof nextPortfolio !== "undefined" && !isEqual(prevPortfolio, nextPortfolio)) {
+    patchRequest.portfolio = nextPortfolio;
   }
 
   return patchRequest;

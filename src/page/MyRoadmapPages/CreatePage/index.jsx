@@ -365,6 +365,7 @@ const MyRoadmapCreatePage = () => {
       languageQualifications,
       premiers,
       planguagesList,
+      portfolioFileName,
       portfolioFileUrl,
     });
 
@@ -423,6 +424,7 @@ const MyRoadmapCreatePage = () => {
     languageQualifications,
     premiers,
     planguagesList,
+    portfolioFileName,
     portfolioFileUrl,
     isPortfolioUploading,
     selectedFiles,
