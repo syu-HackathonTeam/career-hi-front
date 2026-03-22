@@ -140,7 +140,7 @@ const MyRoadmapCreatePage = () => {
 
     const selectedFile = files?.[0]?.file;
     if (!selectedFile) {
-      const deleteTargetFileName = portfolioFileName || getFileNameFromUrl(portfolioFileUrl);
+      const deleteTargetFileName = getFileNameFromUrl(portfolioFileUrl) || portfolioFileName;
       if (deleteTargetFileName) {
         const deleteResult = await api_deleteFile(deleteTargetFileName);
         if (!deleteResult?.success) {
@@ -153,7 +153,7 @@ const MyRoadmapCreatePage = () => {
       return;
     }
 
-    const deleteTargetFileName = portfolioFileName || getFileNameFromUrl(portfolioFileUrl);
+    const deleteTargetFileName = getFileNameFromUrl(portfolioFileUrl) || portfolioFileName;
     if (deleteTargetFileName) {
       const deleteResult = await api_deleteFile(deleteTargetFileName);
       if (!deleteResult?.success) {

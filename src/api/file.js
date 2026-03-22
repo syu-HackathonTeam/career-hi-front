@@ -2,6 +2,25 @@ import { api } from "./index";
 
 const MAX_UPLOAD_FILE_SIZE_MB = 10;
 const MAX_UPLOAD_FILE_SIZE_BYTES = MAX_UPLOAD_FILE_SIZE_MB * 1024 * 1024;
+const SUCCESS_STATUS = new Set(["SUCCESS", "OK", "200"]);
+
+const isSuccessStatus = (status) => {
+  if (typeof status === "number") {
+    return status >= 200 && status < 300;
+  }
+
+  if (!status) return false;
+  return SUCCESS_STATUS.has(String(status).toUpperCase());
+};
+
+const normalizeFileUploadData = (payload) => {
+  const data = payload?.data || payload;
+
+  return {
+    fileName: data?.FileName || data?.fileName || "",
+    fileUrl: data?.FileUrl || data?.fileUrl || "",
+  };
+};
 
 // 파일 업로드
 export const api_uploadFile = async (file) => {
@@ -35,14 +54,16 @@ export const api_uploadFile = async (file) => {
     });
 
     const payload = response?.data;
-    const data = payload?.data;
+    const { fileName, fileUrl } = normalizeFileUploadData(payload);
+    const hasSuccessStatus = isSuccessStatus(payload?.status);
+    const isHttpSuccess = response?.status >= 200 && response?.status < 300;
 
-    if (payload?.status === "SUCCESS" && data?.FileUrl) {
+    if ((hasSuccessStatus || isHttpSuccess) && fileUrl) {
       return {
         success: true,
         message: payload?.message || "파일 업로드가 완료되었습니다.",
-        fileName: data?.FileName || file?.name || "",
-        fileUrl: data?.FileUrl,
+        fileName: fileName || file?.name || "",
+        fileUrl,
       };
     }
 
@@ -79,8 +100,10 @@ export const api_deleteFile = async (fileName) => {
       params: { fileName },
     });
     const payload = response?.data;
+    const hasSuccessStatus = isSuccessStatus(payload?.status);
+    const isHttpSuccess = response?.status >= 200 && response?.status < 300;
 
-    if (payload?.status === "SUCCESS") {
+    if (hasSuccessStatus || isHttpSuccess) {
       return {
         success: true,
         message: payload?.message || "파일이 삭제되었습니다.",
