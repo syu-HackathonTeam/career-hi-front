@@ -6,11 +6,11 @@ import { useMediaQuery } from "react-responsive";
  */
 export const useMedia = () => {
   const isPc = useMediaQuery({
-    query: "(min-width:1025px)",
+    query: "(min-width:640px)", // md 이상이면 PC
   });
 
   const isMobile = useMediaQuery({
-    query: "(max-width:1024px)",
+    query: "(max-width:640px)", // md 미만이면 모바일
   });
 
   return { isPc, isMobile };

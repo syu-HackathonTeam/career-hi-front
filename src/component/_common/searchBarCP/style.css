@@ -1,0 +1,7 @@
+/* .searchBarCp {
+  focus:border-gray-500 focus:outline-none
+} */
+
+.searchBarCp:focus-within {
+  border-color: var(--color-gray-500);
+}

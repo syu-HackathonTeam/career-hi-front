@@ -14,8 +14,10 @@
   /* 포인트 컬러 팔레트 */
   --color-point-main: #146247;
   --color-point-sub: #ffafc6;
+  --color-point-sub-bold: #fe7ba0;
   --color-point-error: #ff0000;
   --color-point-text: #171c20;
+  --color-point-footerBG: #fbfdff;
 
   /* 파란색 팔레트 */
   --color-blue-100: #eaebff;
@@ -34,4 +36,20 @@
   --color-green-500: #5cff4d;
   --color-green-600: #38ff26;
   --color-green-700: #38d255;
+
+  /* 폰트 등록 */
+  --font-pretendard: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+  --font-kimm: "KIMM", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ApexCharts tooltip: 기본 배경/테두리 제거 (커스텀 div만 보이게) */
+.apexcharts-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.apexcharts-tooltip-title {
+  display: none !important;
 }
