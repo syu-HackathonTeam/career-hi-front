@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { api_deleteUser, api_login, api_loginCheck } from "../api/login";
+import { api_deleteUser, api_login, api_loginCheck, api_logout } from "../api/login";
 import { api_signup } from "../api/signup";
 import { api_changePassword } from "../api/changePassword";
 import { clearTokenInfo, setTokenInfo } from "../api";
@@ -193,17 +193,17 @@ export const LoginInfoProvider = ({ children }) => {
   const userDelete = async () => {
     try {
       const res = await api_deleteUser();
-      if (res) {
+      if (res?.success) {
         setLoginInfo(DEFAULT_LOGIN_INFO);
         clearTokenInfo();
         return {
           success: true,
-          message: "회원 탈퇴에 성공했습니다.",
+          message: res?.message || "회원 탈퇴에 성공했습니다.",
         };
       } else {
         return {
           success: false,
-          message: "회원 탈퇴에 실패했습니다.",
+          message: res?.message || "회원 탈퇴에 실패했습니다.",
         };
       }
     } catch (err) {
@@ -211,6 +211,27 @@ export const LoginInfoProvider = ({ children }) => {
       return {
         success: false,
         message: "회원 탈퇴에 실패했습니다.",
+      };
+    }
+  };
+
+  const logout = async () => {
+    try {
+      const res = await api_logout();
+      if (res?.success) {
+        setLoginInfo(DEFAULT_LOGIN_INFO);
+        clearTokenInfo();
+      }
+
+      return {
+        success: !!res?.success,
+        message: res?.message || (res?.success ? "로그아웃 되었습니다." : "로그아웃에 실패했습니다."),
+      };
+    } catch (err) {
+      console.error(err);
+      return {
+        success: false,
+        message: "로그아웃에 실패했습니다.",
       };
     }
   };
@@ -227,6 +248,7 @@ export const LoginInfoProvider = ({ children }) => {
         roadmapReportId,
         setRoadmapReportId,
         userDelete,
+        logout,
       }}>
       {children}
     </LoginInfoContext.Provider>

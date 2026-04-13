@@ -96,9 +96,7 @@ export const api_deleteFile = async (fileName) => {
   }
 
   try {
-    const response = await api.delete(`/api/v1/files`, {
-      params: { fileName },
-    });
+    const response = await api.delete(`/api/v1/files/${encodeURIComponent(fileName)}`);
     const payload = response?.data;
     const hasSuccessStatus = isSuccessStatus(payload?.status);
     const isHttpSuccess = response?.status >= 200 && response?.status < 300;

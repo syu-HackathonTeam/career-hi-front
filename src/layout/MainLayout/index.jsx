@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMedia } from "../../hook/useMedia";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,8 +9,9 @@ import { useLoginInfo } from "../../context/LoginInfoContext";
 const MainContentLayout = ({ children, page = "main", fixed = false, scroll = false }) => {
   const nav = useNavigate();
   const { isPc } = useMedia();
+  const [isAccountActionLoading, setIsAccountActionLoading] = useState(false);
 
-  const { userDelete } = useLoginInfo();
+  const { userDelete, logout } = useLoginInfo();
 
   if (!isPc) return children;
 
@@ -20,25 +22,43 @@ const MainContentLayout = ({ children, page = "main", fixed = false, scroll = fa
       }`}>
       <div className="fixed bottom-8 left-8 gap-4 z-999">
         <p
-          onClick={() => {
-            console.log("클릭");
+          onClick={async () => {
+            if (isAccountActionLoading) return;
+
+            setIsAccountActionLoading(true);
+            const result = await logout();
+            setIsAccountActionLoading(false);
+
+            if (result?.success) {
+              alert(result?.message || "로그아웃 되었습니다.");
+              nav("/login");
+              return;
+            }
+
+            alert(result?.message || "로그아웃에 실패했습니다.\n나중에 다시 시도해주세요.");
           }}
-          className="B4 cursor-pointer ">
-          로그아웃
+          className={`B4 cursor-pointer transition-all duration-150 hover:opacity-70 active:scale-95 ${isAccountActionLoading ? "pointer-events-none opacity-50" : ""}`}>
+          {isAccountActionLoading ? "처리 중..." : "로그아웃"}
         </p>
         <p
           onClick={async () => {
+            if (isAccountActionLoading) return;
+
             if (window.confirm("정말 회원 탈퇴를 진행하시겠습니까?\n탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.")) {
-              await userDelete()
-                .then(() => {
-                  alert("회원 탈퇴가 완료되었습니다.");
-                })
-                .catch(() => {
-                  alert("회원 탈퇴에 실패했습니다.\n나중에 다시 시도해주세요.");
-                });
+              setIsAccountActionLoading(true);
+              const result = await userDelete();
+              setIsAccountActionLoading(false);
+
+              if (result?.success) {
+                alert(result?.message || "회원 탈퇴가 완료되었습니다.");
+                nav("/login");
+                return;
+              }
+
+              alert(result?.message || "회원 탈퇴에 실패했습니다.\n나중에 다시 시도해주세요.");
             }
           }}
-          className="B4 cursor-pointer text-point-sub-bold mt-4">
+          className={`B4 cursor-pointer text-point-sub-bold mt-4 transition-all duration-150 hover:opacity-70 active:scale-95 ${isAccountActionLoading ? "pointer-events-none opacity-50" : ""}`}>
           회원 탈퇴
         </p>
       </div>
