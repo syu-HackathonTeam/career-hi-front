@@ -96,32 +96,53 @@ export const api_login = async ({ email, password }) => {
 };
 
 export const api_logout = async () => {
-  const { refreshToken } = getTokenInfo();
-
   try {
-    const response = await api.post("/api/v1/auth/logout", {
-      refreshToken,
-    });
+    const response = await api.post("/api/v1/auth/logout");
+    const payload = response?.data;
 
-    return response?.data?.status === "SUCCESS";
+    if (payload?.status === "SUCCESS") {
+      return {
+        success: true,
+        message: payload?.message || "로그아웃 되었습니다.",
+      };
+    }
+
+    return {
+      success: false,
+      message: payload?.message || "로그아웃에 실패했습니다.",
+      errorCode: payload?.errorCode,
+    };
   } catch (err) {
-    console.error("로그아웃 실패:", err);
-    return false;
+    return {
+      success: false,
+      message: err?.response?.data?.message || "로그아웃에 실패했습니다.",
+      errorCode: err?.response?.data?.errorCode,
+    };
   }
 };
 
 export const api_deleteUser = async () => {
-  // NOTE: API 서버 연결 불가로 실제 요청은 잠시 주석 처리
   try {
     const response = await api.delete("/api/v1/users/me");
     const payload = response?.data;
+
     if (payload?.status === "SUCCESS") {
-      return true;
+      return {
+        success: true,
+        message: payload?.message || "회원 탈퇴가 완료되었습니다.",
+      };
     }
 
-    return false;
+    return {
+      success: false,
+      message: payload?.message || "회원 탈퇴에 실패했습니다.",
+      errorCode: payload?.errorCode,
+    };
   } catch (err) {
-    console.error("회원 탈퇴 실패:", err);
-    return false;
+    return {
+      success: false,
+      message: err?.response?.data?.message || "회원 탈퇴에 실패했습니다.",
+      errorCode: err?.response?.data?.errorCode,
+    };
   }
 };
